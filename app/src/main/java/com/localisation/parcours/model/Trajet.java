@@ -1,5 +1,7 @@
 package com.localisation.parcours.model;
 
+import java.sql.Date;
+import java.sql.Time;
 import java.util.Vector;
 
 /**
@@ -7,12 +9,23 @@ import java.util.Vector;
  */
 public class Trajet {
 
+    private int id;
     private Vector<PtMarquage> ptMs ;
     private int niv_init_batt, niv_fin_batt;
     private int freq_pt_m;
     private boolean loc_mode;
+    private int zoom;
     private int nbr_sb;
-    private InstantMarquage debut, fin;
+    private Time debut, fin;
+    private Date date;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public Vector<PtMarquage> getPtMs() {
         return ptMs;
@@ -54,6 +67,14 @@ public class Trajet {
         this.loc_mode = loc_mode;
     }
 
+    public int getZoom() {
+        return zoom;
+    }
+
+    public void setZoom(int zoom) {
+        this.zoom = zoom;
+    }
+
     public int getNbr_sb() {
         return nbr_sb;
     }
@@ -62,19 +83,27 @@ public class Trajet {
         this.nbr_sb = nbr_sb;
     }
 
-    public InstantMarquage getDebut() {
+    public Time getDebut() {
         return debut;
     }
 
-    public void setDebut(InstantMarquage debut) {
+    public void setDebut(Time debut) {
         this.debut = debut;
     }
 
-    public InstantMarquage getFin() {
+    public Time getFin() {
         return fin;
     }
 
-    public void setFin(InstantMarquage fin) {
+    public void setFin(Time fin) {
         this.fin = fin;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

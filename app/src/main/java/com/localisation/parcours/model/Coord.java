@@ -5,29 +5,40 @@ package com.localisation.parcours.model;
  */
 public class Coord {
 
-    private float longitude, latitude, altitude;
+    private double longitude, latitude, altitude;
 
-    public float getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(float longitude) {
+    public Coord(double longitude, double latitude) {
         this.longitude = longitude;
-    }
-
-    public float getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(float latitude) {
         this.latitude = latitude;
     }
 
-    public float getAltitude() {
+    public Coord(double longitude, double latitude, double altitude) {
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.altitude = altitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getAltitude() {
         return altitude;
     }
 
-    public void setAltitude(float altitude) {
+    public void setAltitude(double altitude) {
         this.altitude = altitude;
     }
 }

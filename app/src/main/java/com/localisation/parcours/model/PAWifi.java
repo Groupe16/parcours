@@ -5,7 +5,24 @@ package com.localisation.parcours.model;
  */
 public class PAWifi {
 
-    private String bssid,ssid,rss;
+    private int id;
+    private String pa,bssid,ssid,rss;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getPa() {
+        return pa;
+    }
+
+    public void setPa(String pa) {
+        this.pa = pa;
+    }
 
     public String getBssid() {
         return bssid;

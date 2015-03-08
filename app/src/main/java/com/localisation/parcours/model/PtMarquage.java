@@ -2,25 +2,38 @@ package com.localisation.parcours.model;
 
 import android.media.Image;
 
+import java.sql.Time;
+
 /**
  * Created by Zalila on 2015-02-27.
  */
 public class PtMarquage {
 
-    private InstantMarquage im;
+    private int id;
+    private Time im;
     private Coord coord;
-    private String dir_dep;
+    private String dir_dep;//direction de déplacement {Nord, Sud, Est, Ouest ou combinaison}
     private int drp;//distance depuis dernier pt
     private int vm;//vitesse moyenne
     private int dt;//Distance totale
     private int niv_batt;
     private Image image;
+    private PtRC ptRCs;
+    private PAWifi pas;
 
-    public InstantMarquage getIm() {
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Time getIm() {
         return im;
     }
 
-    public void setIm(InstantMarquage im) {
+    public void setIm(Time im) {
         this.im = im;
     }
 
@@ -78,5 +91,21 @@ public class PtMarquage {
 
     public void setImage(Image image) {
         this.image = image;
+    }
+
+    public PtRC getPtRC() {
+        return ptRCs;
+    }
+
+    public void setPtRC(PtRC ptRCs) {
+        this.ptRCs = ptRCs;
+    }
+
+    public PAWifi getPa() {
+        return pas;
+    }
+
+    public void setPa(PAWifi pas) {
+        this.pas = pas;
     }
 }

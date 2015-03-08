@@ -5,13 +5,22 @@ package com.localisation.parcours.model;
  */
 public class PtRC {
 
+    private int id;
     private String type_R;//type du reseau cellulaire
-    private String mmc;//Mobile Country Code
-    private String MNC;//Mobile Network Code
+    private String mcc;//Mobile Country Code
+    private String mnc;//Mobile Network Code
     private String cell_id;//identifiant de la cellule d'attache
     private String lac;//Location Area Code
     private int niv_sig_sb;//niveau du signal de la station de base
     private Coord coord_sb;//coordonnees de la station de base
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getType_R() {
         return type_R;
@@ -21,20 +30,20 @@ public class PtRC {
         this.type_R = type_R;
     }
 
-    public String getMmc() {
-        return mmc;
+    public String getMcc() {
+        return mcc;
     }
 
-    public void setMmc(String mmc) {
-        this.mmc = mmc;
+    public void setMcc(String mcc) {
+        this.mcc = mcc;
     }
 
-    public String getMNC() {
-        return MNC;
+    public String getmnc() {
+        return mnc;
     }
 
-    public void setMNC(String MNC) {
-        this.MNC = MNC;
+    public void setmnc(String mnc) {
+        this.mnc = mnc;
     }
 
     public String getCell_id() {

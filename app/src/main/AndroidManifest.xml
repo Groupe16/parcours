@@ -42,6 +42,30 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.localisation.parcours.MainActivity" />
         </activity>
+        <activity
+            android:name=".historyActivity"
+            android:label="@string/title_activity_history" >
+        </activity>
+        <activity
+            android:name=".InitilalizeActivity"
+            android:label="@string/title_activity_initilalize" >
+        </activity>
+        <activity
+            android:name=".PointActivity"
+            android:label="@string/title_activity_point" >
+        </activity>
+        <activity
+            android:name=".AccessPointActivity"
+            android:label="@string/title_activity_access_point" >
+        </activity>
+        <activity
+            android:name=".CellActivity"
+            android:label="@string/title_activity_cell" >
+        </activity>
+        <activity
+            android:name=".PathDetailActivity"
+            android:label="@string/title_activity_path_detail" >
+        </activity>
     </application>
 
 </manifest>
