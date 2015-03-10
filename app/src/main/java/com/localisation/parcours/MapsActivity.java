@@ -7,6 +7,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.localisation.parcours.database.SQLiteTrajet;
+import com.localisation.parcours.model.PtMarquage;
+import com.localisation.parcours.model.Trajet;
 
 public class MapsActivity extends FragmentActivity {
 
@@ -17,6 +20,14 @@ public class MapsActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
+
+        Trajet trajet = new Trajet();
+        PtMarquage ptMarquage = new PtMarquage();
+//trajet.addPtM(ptMarquage);
+
+        SQLiteTrajet db = new SQLiteTrajet();
+        db.addTrajet(trajet);
+
     }
 
     @Override

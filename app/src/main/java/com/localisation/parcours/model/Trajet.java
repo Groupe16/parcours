@@ -13,6 +13,7 @@ import java.util.Vector;
 public class Trajet implements Parcelable{
 
     private int id;
+    private String adrDebut, adrFin;
     private Vector<PtMarquage> ptMs ;
     private int niv_init_batt, niv_fin_batt;
     private int freq_pt_m;
@@ -71,6 +72,10 @@ public class Trajet implements Parcelable{
         this.zoom = in.readInt();
         this.nbr_sb = in.readInt();
         this.date = Date.valueOf(in.readString());
+    }
+
+    public void addPoint(PtMarquage ptMarquage){
+        this.ptMs.addElement(ptMarquage);
     }
 
     public int getId() {
