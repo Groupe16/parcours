@@ -78,7 +78,7 @@ public class SQLiteTrajet extends SQLiteOpenHelper {
         values.put(KEY_NBR_SB, trajet.getNbr_sb());
         SQLitePtMarquage dbPt = new SQLitePtMarquage(this.context);
         for (int i = 0; i < trajet.getPtMs().size(); i++){
-            dbPt.addPoint(trajet.getPtMs().get(i), trajet);//TODO i!!!!!
+            dbPt.addPoint(trajet.getPtMs().get(i), trajet);
         }
 
         db.insert(TABLE_TRAJET, null, values);
@@ -162,7 +162,7 @@ public class SQLiteTrajet extends SQLiteOpenHelper {
 
         SQLitePtMarquage dbPt = new SQLitePtMarquage(this.context);
         for (int i = 0; i < trajet.getPtMs().size(); i++){
-            dbPt.updatePoint(trajet.getPtMs().get(i), trajet);//TODO i!!!!!
+            dbPt.updatePoint(trajet.getPtMs().get(i), trajet);
         }
 
         int i = db.update(TABLE_TRAJET, values, KEY_ID+" = ?",

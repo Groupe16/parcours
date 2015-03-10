@@ -45,7 +45,7 @@ public class SQLitePtMarquage extends SQLiteOpenHelper {
                 "niv_batt INTEGER, "+
                 //TODO image
                 "id_trajet INTEGER, "+
-                "FOREIGN KEY(id_trajet) REFERENCES trajet(id) )";
+                "FOREIGN KEY(id_trajet) REFERENCES trajet(id) ON UPDATE CASCADE ON DELETE CASCADE)";
 
         db.execSQL(CREATE_POINT_TABLE);
     }
@@ -102,7 +102,7 @@ public class SQLitePtMarquage extends SQLiteOpenHelper {
         db.close();
     }
 
-    public PtMarquage getPoint(int id){
+    public PtMarquage getPoint(int id, Trajet trajet){
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor =
@@ -126,10 +126,10 @@ public class SQLitePtMarquage extends SQLiteOpenHelper {
         //si Mod_Loc = GPS
         if (trajet.isLoc_mode()) {
             SQLitePA dbPa = new SQLitePA(this.context);
-            dbPa.getPA(point.getPa());
+            dbPa.getPA(point.getPa().getId());
         }else{//si Mod_Loc = reseau cellulaire
             SQLiteCellule dbCell = new SQLiteCellule(this.context);
-            dbCell.addCellule(point.getPtRC(), point.getId());
+            dbCell.getCellule(point.getPtRC().getId());
         }
 
         Log.d("getPtMarquage("+id+")", point.toString());
@@ -159,6 +159,15 @@ public class SQLitePtMarquage extends SQLiteOpenHelper {
                     point.setVm(Integer.parseInt(cursor.getString(7)));
                     point.setDt(Integer.parseInt(cursor.getString(8)));
                     point.setNiv_batt(Integer.parseInt(cursor.getString(9)));
+
+                    //si Mod_Loc = GPS
+                    if (trajet.isLoc_mode()) {
+                        SQLitePA dbPa = new SQLitePA(this.context);
+                        dbPa.getPA(point.getPa().getId());
+                    }else{//si Mod_Loc = reseau cellulaire
+                        SQLiteCellule dbCell = new SQLiteCellule(this.context);
+                        dbCell.getCellule(point.getPtRC().getId());
+                    }
 
                     points.add(point);
                 }

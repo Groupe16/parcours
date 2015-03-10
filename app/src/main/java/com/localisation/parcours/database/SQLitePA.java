@@ -36,7 +36,8 @@ public class SQLitePA extends SQLiteOpenHelper {
                 "ssid TEXT, "+
                 "rss TEXT, "+
                 "id_point INTEGER, "+
-                "FOREIGN KEY(id_point) REFERENCES point_marquage(id) )";
+                "FOREIGN KEY(id_point) REFERENCES point_marquage(id) " +
+                "ON UPDATE CASCADE ON DELETE CASCADE)";
 
         db.execSQL(CREATE_PA_TABLE);
     }

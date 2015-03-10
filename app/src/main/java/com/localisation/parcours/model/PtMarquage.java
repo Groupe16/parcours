@@ -1,13 +1,16 @@
 package com.localisation.parcours.model;
 
 import android.media.Image;
+import android.os.Parcel;
+import android.os.Parcelable;
 
+import java.sql.Date;
 import java.sql.Time;
 
 /**
  * Created by Zalila on 2015-02-27.
  */
-public class PtMarquage {
+public class PtMarquage implements Parcelable{
 
     private int id;
     private Time im;
@@ -20,6 +23,61 @@ public class PtMarquage {
     private Image image;
     private PtRC ptRCs;
     private PAWifi pas;
+
+    public PtMarquage() {
+    }
+
+    @Override
+    public int describeContents()
+    {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags)
+    {
+        dest.writeInt(id);
+        dest.writeString(String.valueOf(im));
+        dest.writeParcelable(coord, flags);
+        dest.writeString(dir_dep);
+        dest.writeInt(drp);
+        dest.writeInt(vm);
+        dest.writeInt(dt);
+        dest.writeInt(niv_batt);
+        dest.writeParcelable(ptRCs, flags);
+        dest.writeParcelable(pas, flags);
+    }
+
+
+    // CREATOR permet de décrire au Parcel comment construire l'Objet
+    public static final Parcelable.Creator<PtMarquage> CREATOR = new Parcelable.Creator<PtMarquage>()
+    {
+        @Override
+        public PtMarquage createFromParcel(Parcel source)
+        {
+            return new PtMarquage(source);
+        }
+
+        @Override
+        public PtMarquage[] newArray(int size)
+        {
+            return new PtMarquage[size];
+        }
+    };
+
+    //Constructeur avec Parcel
+    public PtMarquage(Parcel in) {
+        this.id = in.readInt();
+        this.im = Time.valueOf(in.readString());
+        this.coord = in.readParcelable(Coord.class.getClassLoader());
+        this.dir_dep = in.readString();
+        this.drp = in.readInt();
+        this.vm = in.readInt();
+        this.dt = in.readInt();
+        this.niv_batt = in.readInt();
+        this.ptRCs = in.readParcelable(PtRC.class.getClassLoader());
+        this.pas = in.readParcelable(PAWifi.class.getClassLoader());
+    }
 
     public int getId() {
         return id;

@@ -42,7 +42,8 @@ public class SQLiteCellule extends SQLiteOpenHelper {
                 "long_sb INTEGER, "+
                 "lat_sb INTEGER, "+
                 "id_point INTEGER, "+
-                "FOREIGN KEY(id_point) REFERENCES point_marquage(id) )";
+                "FOREIGN KEY(id_point) REFERENCES point_marquage(id) " +
+                "ON UPDATE CASCADE ON DELETE CASCADE)";
 
         db.execSQL(CREATE_CELLULE_TABLE);
     }
