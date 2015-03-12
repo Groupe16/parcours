@@ -1,12 +1,20 @@
 package com.localisation.parcours;
 
+import android.content.Intent;
+import android.graphics.Point;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+
+import com.localisation.parcours.model.PtMarquage;
 
 
 public class PointActivity extends ActionBarActivity {
+
+    private PtMarquage ptMarquage;
+    private boolean mod_loc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,5 +43,14 @@ public class PointActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void paClick(View view){
+        Intent intent;
+        if (this.mod_loc)
+            intent = new Intent(PointActivity.this, AccessPointActivity.class);
+        else
+            intent = new Intent(PointActivity.this, CellActivity.class);
+        startActivity(intent);
     }
 }

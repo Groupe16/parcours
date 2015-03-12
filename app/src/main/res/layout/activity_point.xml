@@ -65,10 +65,10 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Distance Totale"
         android:id="@+id/dtTextView"
-        android:layout_above="@+id/nivBattTextView"
+        android:layout_below="@+id/vmTextView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="64dp" />
+        android:layout_marginTop="72dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -76,18 +76,90 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Niveau de la batterie:"
         android:id="@+id/nivBattTextView"
-        android:layout_above="@+id/ptTextView"
+        android:layout_below="@+id/dtTextView"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="45dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Point d&apos;accès / Cellule"
+        android:id="@+id/paOrCellButton"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:onClick="paClick"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Connecté à:"
-        android:id="@+id/ptTextView"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="46dp" />
+        android:id="@+id/timeText"
+        android:layout_above="@+id/coordTextView"
+        android:layout_centerHorizontal="true"
+        android:text="00:00" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/coordText"
+        android:layout_alignTop="@+id/coordTextView"
+        android:layout_toRightOf="@+id/dtTextView"
+        android:layout_toEndOf="@+id/dtTextView"
+        android:text="(,,)" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/dirDepText"
+        android:layout_alignTop="@+id/dirDepTextView"
+        android:layout_toRightOf="@+id/drpTextView"
+        android:layout_toEndOf="@+id/drpTextView" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/drpText"
+        android:layout_alignTop="@+id/drpTextView"
+        android:layout_alignRight="@+id/paOrCellButton"
+        android:layout_alignEnd="@+id/paOrCellButton"
+        android:text="métres" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="M/m"
+        android:id="@+id/vmText"
+        android:layout_alignTop="@+id/vmTextView"
+        android:layout_toRightOf="@+id/nivBattTextView"
+        android:layout_toEndOf="@+id/nivBattTextView" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="métres"
+        android:id="@+id/dtText"
+        android:layout_alignTop="@+id/dtTextView"
+        android:layout_toRightOf="@+id/nivBattTextView"
+        android:layout_toEndOf="@+id/nivBattTextView"
+        android:layout_alignBottom="@+id/dtTextView" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="%"
+        android:id="@+id/nivBattText"
+        android:layout_alignTop="@+id/nivBattTextView"
+        android:layout_toRightOf="@+id/timeText"
+        android:layout_toEndOf="@+id/timeText" />
+
 </RelativeLayout>
