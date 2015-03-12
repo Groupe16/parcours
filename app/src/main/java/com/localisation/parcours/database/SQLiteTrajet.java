@@ -71,7 +71,7 @@ public class SQLiteTrajet extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_DATE, String.valueOf(trajet.getDate()));
         values.put(KEY_FREQ, trajet.getFreq_pt_m());
-        values.put(KEY_MOD_LOC, trajet.isLoc_mode());
+        values.put(KEY_MOD_LOC, String.valueOf(trajet.isLoc_mode()));
         values.put(KEY_NIV_INIT_BATT, trajet.getNiv_init_batt());
         values.put(KEY_NIV_FIN_BATT, trajet.getNiv_fin_batt());
         values.put(KEY_ZOOM, trajet.getZoom());
@@ -154,7 +154,7 @@ public class SQLiteTrajet extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_DATE, trajet.getDate().getTime());
         values.put(KEY_FREQ, trajet.getFreq_pt_m());
-        values.put(KEY_MOD_LOC, trajet.isLoc_mode());
+        values.put(KEY_MOD_LOC, String.valueOf(trajet.isLoc_mode()));
         values.put(KEY_NIV_INIT_BATT, trajet.getNiv_init_batt());
         values.put(KEY_NIV_FIN_BATT, trajet.getNiv_fin_batt());
         values.put(KEY_ZOOM, trajet.getZoom());
