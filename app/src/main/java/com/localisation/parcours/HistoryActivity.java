@@ -24,7 +24,6 @@ public class HistoryActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
-
         SQLiteTrajet db = new SQLiteTrajet(this);
         List<Trajet> trajets = db.getAllTrajets();
         final ListView listTrajets = (ListView) findViewById(R.id.historyListView);

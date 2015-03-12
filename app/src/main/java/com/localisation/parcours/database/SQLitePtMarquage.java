@@ -20,12 +20,9 @@ import java.util.List;
  */
 public class SQLitePtMarquage extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "trackingdb";
-
     Context context;
     public SQLitePtMarquage(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        super(context, SQLiteTrajet.DATABASE_NAME, null, SQLiteTrajet.DATABASE_VERSION);
         this.context = context;
     }
 
@@ -34,17 +31,17 @@ public class SQLitePtMarquage extends SQLiteOpenHelper {
 
         String CREATE_POINT_TABLE = "CREATE TABLE point_marquage ( " +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "im TIME, "+
-                "longitude DOUBLE, "+
-                "latitude DOUBLE, "+
-                "altitude DOUBLE, "+
+                "im TEXT, "+
+                "longitude REAL, "+
+                "latitude REAL, "+
+                "altitude REAL, "+
                 "dir_dep TEXT, "+
                 "drp INTEGER, "+
-                "vm FLOAT, "+
-                "dt FLOAT, "+
+                "vm REAL, "+
+                "dt REAL, "+
                 "niv_batt INTEGER, "+
                 //TODO image
-                "id_trajet INTEGER, "+
+                "id_trajet INTEGER "+
                 "FOREIGN KEY(id_trajet) REFERENCES trajet(id) ON UPDATE CASCADE ON DELETE CASCADE)";
 
         db.execSQL(CREATE_POINT_TABLE);
@@ -78,7 +75,7 @@ public class SQLitePtMarquage extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(KEY_IM, point.getIm().getTime());
+        values.put(KEY_IM, String.valueOf(point.getIm().getTime()));
         values.put(KEY_LONGITUDE, point.getCoord().getLongitude());
         values.put(KEY_LATITUDE, point.getCoord().getLatitude());
         values.put(KEY_ALTITUDE, point.getCoord().getAltitude());
@@ -88,7 +85,10 @@ public class SQLitePtMarquage extends SQLiteOpenHelper {
         values.put(KEY_DISTANCE_TOTALE, point.getDt());
         values.put(KEY_BATTERIE, point.getNiv_batt());
         values.put(KEY_ID_TRAJET, trajet.getId());
-
+        
+        db.insert(TABLE_POINT, null, values);
+        db.close();
+/*
         //si Mod_Loc = GPS
         if (trajet.isLoc_mode()) {
             SQLitePA dbPa = new SQLitePA(this.context);
@@ -96,10 +96,7 @@ public class SQLitePtMarquage extends SQLiteOpenHelper {
         }else{//si Mod_Loc = reseau cellulaire
             SQLiteCellule dbCell = new SQLiteCellule(this.context);
             dbCell.addCellule(point.getPtRC(), point.getId());
-        }
-        db.insert(TABLE_POINT, null, values);
-
-        db.close();
+        }*/
     }
 
     public PtMarquage getPoint(int id, Trajet trajet){

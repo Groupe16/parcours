@@ -25,7 +25,7 @@ public class MapsActivity extends FragmentActivity {
         PtMarquage ptMarquage = new PtMarquage();
 //trajet.addPtM(ptMarquage);
 
-        SQLiteTrajet db = new SQLiteTrajet();
+        SQLiteTrajet db = new SQLiteTrajet(this);
         db.addTrajet(trajet);
 
     }

@@ -20,8 +20,8 @@ import java.util.Vector;
  */
 public class SQLiteTrajet extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "trackingdb";
+    static final int DATABASE_VERSION = 1;
+    static final String DATABASE_NAME = "trackingdb";
 
     Context context;
     public SQLiteTrajet(Context context) {
@@ -33,9 +33,9 @@ public class SQLiteTrajet extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_TRAJET_TABLE = "CREATE TABLE trajet ( " +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "date DATE, "+
+                "date TEXT, "+
                 "frequence TEXT, "+
-                "mod_loc BOOL, "+
+                "mod_loc INTEGER, "+
                 "niv_init_batt INTEGER, "+
                 "niv_fin_batt INTEGER, "+
                 "zoom INTEGER, "+
@@ -69,21 +69,22 @@ public class SQLiteTrajet extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(KEY_DATE, trajet.getDate().getTime());
+        values.put(KEY_DATE, String.valueOf(trajet.getDate()));
         values.put(KEY_FREQ, trajet.getFreq_pt_m());
         values.put(KEY_MOD_LOC, trajet.isLoc_mode());
         values.put(KEY_NIV_INIT_BATT, trajet.getNiv_init_batt());
         values.put(KEY_NIV_FIN_BATT, trajet.getNiv_fin_batt());
         values.put(KEY_ZOOM, trajet.getZoom());
         values.put(KEY_NBR_SB, trajet.getNbr_sb());
+
+        db.insert(TABLE_TRAJET, null, values);
+        db.close();
+/*
         SQLitePtMarquage dbPt = new SQLitePtMarquage(this.context);
         for (int i = 0; i < trajet.getPtMs().size(); i++){
             dbPt.addPoint(trajet.getPtMs().get(i), trajet);
-        }
+        }*/
 
-        db.insert(TABLE_TRAJET, null, values);
-
-        db.close();
     }
 
     public Trajet getTrajet(int id){
@@ -135,8 +136,7 @@ public class SQLiteTrajet extends SQLiteOpenHelper {
                 trajet.setZoom(Integer.parseInt(cursor.getString(6)));
                 trajet.setNbr_sb(Integer.parseInt(cursor.getString(7)));
 
-                SQLitePtMarquage dbPt = new SQLitePtMarquage(this.context);
-                trajet.setPtMs((Vector<PtMarquage>) dbPt.getAllPoints(trajet));
+
 
                 trajets.add(trajet);
             } while (cursor.moveToNext());

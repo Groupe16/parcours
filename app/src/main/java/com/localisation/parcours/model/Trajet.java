@@ -23,6 +23,7 @@ public class Trajet implements Parcelable{
     private Date date;
 
     public Trajet() {
+        this.ptMs = new Vector<>();
     }
 
     @Override
