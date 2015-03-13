@@ -13,4 +13,13 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:choiceMode="none" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/msgTextView"
+        android:layout_alignTop="@+id/historyListView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="158dp" />
 </RelativeLayout>

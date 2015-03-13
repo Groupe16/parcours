@@ -209,7 +209,6 @@ public class SQLiteTrajet extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(query, null);
 
         Trajet trajet = null;
-        int i = 0;
         if (cursor.moveToFirst()) {
             do {
                 trajet = new Trajet();
@@ -225,12 +224,17 @@ public class SQLiteTrajet extends SQLiteOpenHelper {
                 trajet.setNbr_sb(Integer.parseInt(cursor.getString(9)));
 
                 trajets.add(trajet);
-            } while (cursor.moveToNext() && ++i != number);
+            } while (cursor.moveToNext());
+        }
+
+        List<Trajet> lasts = new LinkedList<>();
+        for (int i = 0; i < number; i++){
+            lasts.add(trajets.get(trajets.size() - i - 1));
         }
 
         Log.d("getAllTrajets()", trajets.toString());
         db.close();
-        return trajets;
+        return lasts;
     }
 
 }

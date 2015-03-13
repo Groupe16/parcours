@@ -14,16 +14,22 @@ public class Trajet implements Parcelable{
 
     private int id;
     private String adrDebut, adrFin;
-    private Vector<PtMarquage> ptMs ;
+    private Date date;
+    private Vector<PtMarquage> ptMs;
     private int niv_init_batt, niv_fin_batt;
     private int freq_pt_m;
     private boolean loc_mode;
     private int zoom;
     private int nbr_sb;
-    private Date date;
 
     public Trajet() {
-        this.ptMs = new Vector<>();
+        this.adrDebut = "";
+        this.adrFin = "";
+        this.ptMs = new Vector<PtMarquage>();
+        this.date = new Date(System.currentTimeMillis());
+        this.niv_init_batt = 99;
+        this.niv_fin_batt = 99;
+        this.nbr_sb = 0;
     }
 
     @Override
@@ -36,6 +42,9 @@ public class Trajet implements Parcelable{
     public void writeToParcel(Parcel dest, int flags)
     {
         dest.writeInt(id);
+        dest.writeString(adrDebut);
+        dest.writeString(adrFin);
+        dest.writeString(String.valueOf(date));
         dest.writeParcelableArray(ptMs.toArray(new PtMarquage[ptMs.size()]), flags);
         dest.writeInt(niv_init_batt);
         dest.writeInt(niv_fin_batt);
@@ -43,7 +52,6 @@ public class Trajet implements Parcelable{
         dest.writeString(String.valueOf(loc_mode));
         dest.writeInt(zoom);
         dest.writeInt(nbr_sb);
-        dest.writeString(String.valueOf(date));
     }
 
     // CREATOR permet de décrire au Parcel comment construire l'Objet
@@ -65,14 +73,21 @@ public class Trajet implements Parcelable{
     //Constructeur avec Parcel
     public Trajet(Parcel in) {
         this.id = in.readInt();
-        PtMarquage[] ptMs = (PtMarquage[]) in.readParcelableArray(PtMarquage.class.getClassLoader());
+        this.adrDebut = in.readString();
+        this.adrFin = in.readString();
+        this.date = Date.valueOf(in.readString());
+        PtMarquage[] ptMs = in.createTypedArray(PtMarquage.CREATOR);
+        //(PtMarquage[]) in.readParcelableArray(PtMarquage.class.getClassLoader());
+        this.ptMs = new Vector<>();
+        for (int i = 0; i < ptMs.length; i++){
+            this.ptMs.addElement(ptMs[i]);
+        }
         this.niv_init_batt = in.readInt();
         this.niv_fin_batt = in.readInt();
         this.freq_pt_m = in.readInt();
         this.loc_mode = Boolean.valueOf(in.readString());
         this.zoom = in.readInt();
         this.nbr_sb = in.readInt();
-        this.date = Date.valueOf(in.readString());
     }
 
     public void addPoint(PtMarquage ptMarquage){
@@ -157,5 +172,27 @@ public class Trajet implements Parcelable{
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public String getAdrDebut() {
+        return adrDebut;
+    }
+
+    public void setAdrDebut(String adrDebut) {
+        this.adrDebut = adrDebut;
+    }
+
+    public String getAdrFin() {
+        return adrFin;
+    }
+
+    public void setAdrFin(String adrFin) {
+        this.adrFin = adrFin;
+    }
+
+    public String getModLoc(){
+        if (this.isLoc_mode())
+            return "GPS";
+        return "réseau cellulaire";
     }
 }
