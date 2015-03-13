@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.localisation.parcours.database.SQLitePtMarquage;
 import com.localisation.parcours.database.SQLiteTrajet;
 import com.localisation.parcours.model.Trajet;
 
@@ -27,10 +28,16 @@ public class HistoryActivity extends ActionBarActivity {
         SQLiteTrajet db = new SQLiteTrajet(this);
         List<Trajet> trajets = db.getAllTrajets();
         final ListView listTrajets = (ListView) findViewById(R.id.historyListView);
+        SQLitePtMarquage dbPM;
+        for (int i = 0; i < trajets.size(); i++){
+            dbPM = new SQLitePtMarquage(this);
+            trajets.get(i).setPtMs(dbPM.getAllPoints(trajets.get(i)));
+        }
         trajets = sort(trajets);
 
+
         List<String> lasts = new ArrayList<>();
-        for (int i = 0; i < trajets.size(); i++){
+        for (int i = 0; i < trajets.size() ; i++){
             lasts.add((i+1) + "-\t Debut: \n" + trajets.get(i).getDebut() + " \n Fin: \n" + trajets.get(i).getFin());
         }
 

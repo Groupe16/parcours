@@ -26,8 +26,6 @@ public class SQLiteCellule extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-
-
         String CREATE_CELLULE_TABLE = "CREATE TABLE cellule ( " +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "type_r TEXT, "+
@@ -40,7 +38,7 @@ public class SQLiteCellule extends SQLiteOpenHelper {
                 "lat_sb INTEGER, "+
                 "id_point INTEGER, "+
                 "FOREIGN KEY(id_point) REFERENCES point_marquage(id) " +
-                "ON UPDATE CASCADE ON DELETE CASCADE)";
+                "ON UPDATE CASCADE)";
 
         db.execSQL(CREATE_CELLULE_TABLE);
     }
@@ -70,6 +68,7 @@ public class SQLiteCellule extends SQLiteOpenHelper {
     public void addCellule(PtRC cellule, int idPoint){
         Log.d("addPtRC()", cellule.toString());
         SQLiteDatabase db = this.getWritableDatabase();
+        this.onUpgrade(db,SQLiteTrajet.DATABASE_VERSION,SQLiteTrajet.DATABASE_VERSION);
 
         ContentValues values = new ContentValues();
         values.put(KEY_TYPE_R, cellule.getType_R());

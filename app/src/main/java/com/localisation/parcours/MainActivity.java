@@ -78,6 +78,7 @@ public class MainActivity extends ActionBarActivity {
         //ptMarquage.setPa(paWifi);
         ptMarquage.setPtRC(ptRC);
         Trajet trajet = new Trajet();
+        trajet.setId(1);
         trajet.setDate(new Date(System.currentTimeMillis()));
         trajet.setLoc_mode(false);
         trajet.setFreq_pt_m(3200);
@@ -136,8 +137,8 @@ public class MainActivity extends ActionBarActivity {
         startActivity(intent);
     }
 
-    public void exitClick(){
-        finish();
+    public void exitClick(View view){
+        this.finish();
         System.exit(0);
     }
 }

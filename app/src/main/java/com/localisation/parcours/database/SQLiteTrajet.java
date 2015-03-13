@@ -42,6 +42,7 @@ public class SQLiteTrajet extends SQLiteOpenHelper {
                 "nbr_sb INTEGER )";
 
         db.execSQL(CREATE_TRAJET_TABLE);
+
     }
 
     @Override
@@ -136,14 +137,12 @@ public class SQLiteTrajet extends SQLiteOpenHelper {
                 trajet.setZoom(Integer.parseInt(cursor.getString(6)));
                 trajet.setNbr_sb(Integer.parseInt(cursor.getString(7)));
 
-
-
                 trajets.add(trajet);
             } while (cursor.moveToNext());
         }
 
         Log.d("getAllTrajets()", trajets.toString());
-
+        db.close();
         return trajets;
     }
 
