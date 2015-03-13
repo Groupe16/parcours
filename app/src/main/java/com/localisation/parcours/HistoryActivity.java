@@ -34,6 +34,7 @@ public class HistoryActivity extends ActionBarActivity {
             trajets.get(i).setPtMs(dbPM.getAllPoints(trajets.get(i)));
         }
         trajets = sort(trajets);
+        /******/
 
 
         List<String> lasts = new ArrayList<>();
