@@ -22,12 +22,14 @@ public class SQLiteCellule extends SQLiteOpenHelper {
 
     public SQLiteCellule(Context context) {
         super(context, SQLiteTrajet.DATABASE_NAME, null, SQLiteTrajet.DATABASE_VERSION);
+        SQLiteDatabase db = this.getWritableDatabase();
+        this.onUpgrade(db,SQLiteTrajet.DATABASE_VERSION,SQLiteTrajet.DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_CELLULE_TABLE = "CREATE TABLE cellule ( " +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "id INTEGER PRIMARY KEY, " +
                 "type_r TEXT, "+
                 "mcc TEXT, "+
                 "mnc TEXT, "+
@@ -71,6 +73,7 @@ public class SQLiteCellule extends SQLiteOpenHelper {
         this.onUpgrade(db,SQLiteTrajet.DATABASE_VERSION,SQLiteTrajet.DATABASE_VERSION);
 
         ContentValues values = new ContentValues();
+        values.put(KEY_ID, String.valueOf(cellule.getId()));
         values.put(KEY_TYPE_R, cellule.getType_R());
         values.put(KEY_MCC, cellule.getMcc());
         values.put(KEY_MNC, cellule.getmnc());
@@ -177,5 +180,23 @@ public class SQLiteCellule extends SQLiteOpenHelper {
         db.close();
         Log.d("deletePtRC", cellule.toString());
 
+    }
+
+    public int cellCount(){
+        int number = 0;
+        String query = "SELECT count(*) FROM " + TABLE_CELLULE;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                number = Integer.parseInt(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+
+        Log.d("cellCount()", number + "cellules");
+        db.close();
+        return number;
     }
 }

@@ -25,13 +25,15 @@ public class SQLitePtMarquage extends SQLiteOpenHelper {
     public SQLitePtMarquage(Context context) {
         super(context, SQLiteTrajet.DATABASE_NAME, null, SQLiteTrajet.DATABASE_VERSION);
         this.context = context;
+        SQLiteDatabase db = this.getWritableDatabase();
+        this.onUpgrade(db,SQLiteTrajet.DATABASE_VERSION,SQLiteTrajet.DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
 
         String CREATE_POINT_TABLE = "CREATE TABLE point_marquage ( " +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "id INTEGER PRIMARY KEY, " +
                 "im TEXT, "+
                 "longitude REAL, "+
                 "latitude REAL, "+
@@ -74,9 +76,9 @@ public class SQLitePtMarquage extends SQLiteOpenHelper {
     public void addPoint(PtMarquage point, Trajet trajet){
         Log.d("addPtMarquage()", point.toString());
         SQLiteDatabase db = this.getWritableDatabase();
-        this.onUpgrade(db,SQLiteTrajet.DATABASE_VERSION,SQLiteTrajet.DATABASE_VERSION);
 
         ContentValues values = new ContentValues();
+        values.put(KEY_ID, String.valueOf(point.getId()));
         values.put(KEY_IM, String.valueOf(point.getIm().getTime()));
         values.put(KEY_LONGITUDE, point.getCoord().getLongitude());
         values.put(KEY_LATITUDE, point.getCoord().getLatitude());
@@ -92,7 +94,7 @@ public class SQLitePtMarquage extends SQLiteOpenHelper {
         db.close();
     }
 
-    public PtMarquage getPoint(int id, Trajet trajet){
+    public PtMarquage getPoint(int id){
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor =
@@ -104,7 +106,7 @@ public class SQLitePtMarquage extends SQLiteOpenHelper {
 
         PtMarquage point = new PtMarquage();
         point.setId(Integer.parseInt(cursor.getString(0)));
-        point.setIm(Time.valueOf(cursor.getString(1)));
+        point.setIm(new Time(Long.valueOf(cursor.getString(1))));
         point.setCoord(new Coord(Double.parseDouble(cursor.getString(2)),
                 Double.parseDouble(cursor.getString(3)), Double.parseDouble(cursor.getString(4))));
         point.setDir_dep(cursor.getString(5));
@@ -112,15 +114,6 @@ public class SQLitePtMarquage extends SQLiteOpenHelper {
         point.setVm(Integer.parseInt(cursor.getString(7)));
         point.setDt(Integer.parseInt(cursor.getString(8)));
         point.setNiv_batt(Integer.parseInt(cursor.getString(9)));
-
-        //si Mod_Loc = GPS
-        if (trajet.isLoc_mode()) {
-            SQLitePA dbPa = new SQLitePA(this.context);
-            dbPa.getPA(point.getPa().getId());
-        }else{//si Mod_Loc = reseau cellulaire
-            SQLiteCellule dbCell = new SQLiteCellule(this.context);
-            dbCell.getCellule(point.getPtRC().getId());
-        }
 
         Log.d("getPtMarquage("+id+")", point.toString());
 
@@ -141,7 +134,7 @@ public class SQLitePtMarquage extends SQLiteOpenHelper {
                 if (trajet.getId() == Integer.parseInt(cursor.getString(10))) {
                     point = new PtMarquage();
                     point.setId(Integer.parseInt(cursor.getString(0)));
-                    //point.setIm(Time.valueOf(cursor.getString(1)));
+                    point.setIm(new Time(Long.valueOf(cursor.getString(1))));
                     point.setCoord(new Coord(Double.parseDouble(cursor.getString(2)),
                             Double.parseDouble(cursor.getString(3)),Double.parseDouble(cursor.getString(4))));
                     point.setDir_dep(cursor.getString(5));
@@ -149,16 +142,7 @@ public class SQLitePtMarquage extends SQLiteOpenHelper {
                     point.setVm(Integer.parseInt(cursor.getString(7)));
                     point.setDt(Integer.parseInt(cursor.getString(8)));
                     point.setNiv_batt(Integer.parseInt(cursor.getString(9)));
-/*
-                    //si Mod_Loc = GPS
-                    if (trajet.isLoc_mode()) {
-                        SQLitePA dbPa = new SQLitePA(this.context);
-                        dbPa.getPA(point.getPa().getId());
-                    }else{//si Mod_Loc = reseau cellulaire
-                        SQLiteCellule dbCell = new SQLiteCellule(this.context);
-                        dbCell.getCellule(point.getPtRC().getId());
-                    }
-*/
+
                     points.add(point);
                 }
             } while (cursor.moveToNext());
@@ -185,15 +169,6 @@ db.close();
         values.put(KEY_BATTERIE, point.getNiv_batt());
         values.put(KEY_ID_TRAJET, trajet.getId());
 
-        //si Mod_Loc = GPS
-        if (trajet.isLoc_mode()) {
-            SQLitePA dbPa = new SQLitePA(this.context);
-            dbPa.updatePA(point.getPa(), point.getId());
-        }else{//si Mod_Loc = reseau cellulaire
-            SQLiteCellule dbCell = new SQLiteCellule(this.context);
-            dbCell.updateCellule(point.getPtRC(), point.getId());
-        }
-
         int i = db.update(TABLE_POINT, values, KEY_ID+" = ?",
                 new String[] { String.valueOf(point.getId()) });
 
@@ -211,5 +186,23 @@ db.close();
         db.close();
         Log.d("deletePtMarquage", point.toString());
 
+    }
+
+    public int pointCount(){
+        int number = 0;
+        String query = "SELECT count(*) FROM " + TABLE_POINT;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                number = Integer.parseInt(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+
+        Log.d("pointCount()", number + "points de marquage");
+        db.close();
+        return number;
     }
 }

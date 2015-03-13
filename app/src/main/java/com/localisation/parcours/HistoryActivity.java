@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.localisation.parcours.database.SQLitePtMarquage;
 import com.localisation.parcours.database.SQLiteTrajet;
@@ -20,58 +21,46 @@ import java.util.List;
 
 public class HistoryActivity extends ActionBarActivity {
 
+    private List<Trajet> trajets;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
         SQLiteTrajet db = new SQLiteTrajet(this);
-        List<Trajet> trajets = db.getAllTrajets();
-        final ListView listTrajets = (ListView) findViewById(R.id.historyListView);
-        SQLitePtMarquage dbPM;
-        for (int i = 0; i < trajets.size(); i++){
-            dbPM = new SQLitePtMarquage(this);
-            trajets.get(i).setPtMs(dbPM.getAllPoints(trajets.get(i)));
-        }
-        trajets = sort(trajets);
-        /******/
 
-
-        List<String> lasts = new ArrayList<>();
-        for (int i = 0; i < trajets.size() ; i++){
-            lasts.add((i+1) + "-\t Debut: \n" + trajets.get(i).getDebut() + " \n Fin: \n" + trajets.get(i).getFin());
-        }
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, lasts);
-        listTrajets.setAdapter(adapter);
-
-        listTrajets.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                Intent intent = new Intent(HistoryActivity.this, PathDetailActivity.class);
-// TODO                intent.putExtra("trajet", (Trajet) listTrajets.getAdapter().getView(position, view, parent));
-                startActivity(intent);
+        if (db.trajetCount() > 0) {
+            trajets = db.getLastTrajets(3);
+            final ListView listTrajets = (ListView) findViewById(R.id.historyListView);
+            SQLitePtMarquage dbPM;
+            for (int i = 0; i < trajets.size(); i++) {
+                dbPM = new SQLitePtMarquage(this);
+                trajets.get(i).setPtMs(dbPM.getAllPoints(trajets.get(i)));
             }
-        });
 
-    }
+            List<String> lasts = new ArrayList<>();
+            for (int i = 0; i < trajets.size(); i++) {
+                lasts.add((i + 1) + "-\t Debut: \n" + trajets.get(i).getAdrDebut() + " \n Fin: \n" + trajets.get(i).getAdrFin());
+            }
 
-    private List sort(List trajets) {
-        int j;
-        List<Trajet> trajetList = new ArrayList<Trajet>();
-        if (trajets.size() > 3)
-            j=3;
-        else
-            j= trajets.size();
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, lasts);
+            listTrajets.setAdapter(adapter);
 
-        for (int i = 0 ; i < j; i++){
-            Trajet trajet = (Trajet) trajets.get(i);
-            trajetList.add(trajet);
+            listTrajets.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Intent intent = new Intent(HistoryActivity.this, PathDetailActivity.class);
+                    intent.putExtra("trajet", trajets.get(position));
+                    startActivity(intent);
+                }
+            });
+
+        }else{
+            TextView msgView = (TextView) findViewById(R.id.msgTextView);
+            msgView.setText("aucun trajet sauvegardé");
         }
-        return trajetList;
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

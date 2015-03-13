@@ -21,13 +21,15 @@ public class SQLitePA extends SQLiteOpenHelper {
 
     public SQLitePA(Context context) {
         super(context, SQLiteTrajet.DATABASE_NAME, null, SQLiteTrajet.DATABASE_VERSION);
+        SQLiteDatabase db = this.getWritableDatabase();
+        this.onUpgrade(db,SQLiteTrajet.DATABASE_VERSION,SQLiteTrajet.DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
 
         String CREATE_PA_TABLE = "CREATE TABLE point_access ( " +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "id INTEGER PRIMARY KEY, " +
                 "pa TEXT, "+
                 "bssid TEXT, "+
                 "ssid TEXT, "+
@@ -59,8 +61,10 @@ public class SQLitePA extends SQLiteOpenHelper {
     public void addPA(PAWifi pa_wifi, int idPoint){
         Log.d("addPAWifi()", pa_wifi.toString());
         SQLiteDatabase db = this.getWritableDatabase();
+        this.onUpgrade(db,SQLiteTrajet.DATABASE_VERSION,SQLiteTrajet.DATABASE_VERSION);
 
         ContentValues values = new ContentValues();
+        values.put(KEY_ID, String.valueOf(pa_wifi.getId()));
         values.put(KEY_PA, pa_wifi.getPa());
         values.put(KEY_BSSID, pa_wifi.getBssid());
         values.put(KEY_SSID, pa_wifi.getSsid());
@@ -151,5 +155,23 @@ public class SQLitePA extends SQLiteOpenHelper {
         db.close();
         Log.d("deletePAWifi", pa_wifi.toString());
 
+    }
+
+    public int paCount(){
+        int number = 0;
+        String query = "SELECT count(*) FROM " + TABLE_PA;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                number = Integer.parseInt(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+
+        Log.d("paCount()", number + "points d'acces");
+        db.close();
+        return number;
     }
 }
