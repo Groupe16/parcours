@@ -12,8 +12,6 @@ import com.localisation.parcours.model.PtMarquage;
 import com.localisation.parcours.model.Trajet;
 
 import java.sql.Time;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Vector;
 
 /**
@@ -25,8 +23,8 @@ public class SQLitePtMarquage extends SQLiteOpenHelper {
     public SQLitePtMarquage(Context context) {
         super(context, SQLiteTrajet.DATABASE_NAME, null, SQLiteTrajet.DATABASE_VERSION);
         this.context = context;
-        SQLiteDatabase db = this.getWritableDatabase();
-        this.onUpgrade(db,SQLiteTrajet.DATABASE_VERSION,SQLiteTrajet.DATABASE_VERSION);
+        /*SQLiteDatabase db = this.getWritableDatabase();
+        this.onUpgrade(db,SQLiteTrajet.DATABASE_VERSION,SQLiteTrajet.DATABASE_VERSION);*/
     }
 
     @Override
@@ -194,6 +192,26 @@ db.close();
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                number = Integer.parseInt(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+
+        Log.d("pointCount()", number + "points de marquage");
+        db.close();
+        return number;
+    }
+
+    public int pointCount(Trajet trajet) {
+        int number = 0;
+        String query = "SELECT count(*) FROM " + TABLE_POINT;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor =
+                db.query(TABLE_POINT, COLUMNS, " id_trajet = ?", new String[] { String.valueOf(trajet.getId()) },
+                        null, null, null, null);
 
         if (cursor.moveToFirst()) {
             do {

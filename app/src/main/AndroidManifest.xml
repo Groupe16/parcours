@@ -49,8 +49,7 @@
         </activity>
         <activity
             android:name=".InitilalizeActivity"
-            android:label="@string/title_activity_initilalize"
-            android:windowSoftInputMode="stateHidden">
+            android:label="@string/title_activity_initilalize">
         </activity>
         <activity
             android:name=".PointActivity"

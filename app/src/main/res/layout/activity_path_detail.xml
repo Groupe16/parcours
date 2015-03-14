@@ -176,4 +176,21 @@
         android:layout_below="@+id/zoomText"
         android:layout_alignRight="@+id/adrDebutText"
         android:layout_alignEnd="@+id/adrDebutText" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/pointListView"
+        android:layout_below="@+id/nbrSBText"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/nbrSBText"
+        android:layout_toStartOf="@+id/nbrSBText" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/msgTextView"
+        android:layout_alignTop="@+id/pointListView"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

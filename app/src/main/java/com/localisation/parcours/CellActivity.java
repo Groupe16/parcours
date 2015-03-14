@@ -4,14 +4,38 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import com.localisation.parcours.model.PtRC;
 
 
 public class CellActivity extends ActionBarActivity {
+
+    private PtRC cell;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cell);
+
+        cell = getIntent().getExtras().getParcelable("Cellule");
+
+        TextView typeRText = (TextView) findViewById(R.id.typeRText);
+        TextView mccText = (TextView) findViewById(R.id.mccText);
+        TextView mncText = (TextView) findViewById(R.id.mncText);
+        TextView cellIdText = (TextView) findViewById(R.id.cellIdText);
+        TextView lacText = (TextView) findViewById(R.id.lacText);
+        TextView nivBattText = (TextView) findViewById(R.id.nivBattText);
+        TextView coordText = (TextView) findViewById(R.id.coordText);
+
+        typeRText.setText(cell.getType_R());
+        mccText.setText(cell.getMcc());
+        mncText.setText(cell.getmnc());
+        cellIdText.setText(cell.getCell_id());
+        lacText.setText(cell.getLac());
+        nivBattText.setText(cell.getNiv_sig_sb() + "%");
+        coordText.setText("(" + cell.getCoord_sb().getLongitude() + "," +
+                cell.getCoord_sb().getLatitude()+ ")");
     }
 
 

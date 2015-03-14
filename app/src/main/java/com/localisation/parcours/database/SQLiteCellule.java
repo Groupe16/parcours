@@ -22,8 +22,8 @@ public class SQLiteCellule extends SQLiteOpenHelper {
 
     public SQLiteCellule(Context context) {
         super(context, SQLiteTrajet.DATABASE_NAME, null, SQLiteTrajet.DATABASE_VERSION);
-        SQLiteDatabase db = this.getWritableDatabase();
-        this.onUpgrade(db,SQLiteTrajet.DATABASE_VERSION,SQLiteTrajet.DATABASE_VERSION);
+        /*SQLiteDatabase db = this.getWritableDatabase();
+        this.onUpgrade(db,SQLiteTrajet.DATABASE_VERSION,SQLiteTrajet.DATABASE_VERSION);*/
     }
 
     @Override
@@ -70,7 +70,6 @@ public class SQLiteCellule extends SQLiteOpenHelper {
     public void addCellule(PtRC cellule, int idPoint){
         Log.d("addPtRC()", cellule.toString());
         SQLiteDatabase db = this.getWritableDatabase();
-        this.onUpgrade(db,SQLiteTrajet.DATABASE_VERSION,SQLiteTrajet.DATABASE_VERSION);
 
         ContentValues values = new ContentValues();
         values.put(KEY_ID, String.valueOf(cellule.getId()));
@@ -93,7 +92,7 @@ public class SQLiteCellule extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor =
-                db.query(TABLE_CELLULE, COLUMNS, " id = ?", new String[] { String.valueOf(id) },
+                db.query(TABLE_CELLULE, COLUMNS, " id_point = ?", new String[] { String.valueOf(id) },
                         null, null, null, null);
 
         if (cursor != null)

@@ -228,7 +228,7 @@ public class SQLiteTrajet extends SQLiteOpenHelper {
         }
 
         List<Trajet> lasts = new LinkedList<>();
-        for (int i = 0; i < number; i++){
+        for (int i = 0; i < (number < trajets.size()? number : trajets.size()); i++){
             lasts.add(trajets.get(trajets.size() - i - 1));
         }
 

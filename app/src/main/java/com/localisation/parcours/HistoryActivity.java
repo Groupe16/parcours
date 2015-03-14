@@ -33,11 +33,11 @@ public class HistoryActivity extends ActionBarActivity {
         if (db.trajetCount() > 0) {
             trajets = db.getLastTrajets(3);
             final ListView listTrajets = (ListView) findViewById(R.id.historyListView);
-            SQLitePtMarquage dbPM;
+            /*SQLitePtMarquage dbPM;
             for (int i = 0; i < trajets.size(); i++) {
                 dbPM = new SQLitePtMarquage(this);
                 trajets.get(i).setPtMs(dbPM.getAllPoints(trajets.get(i)));
-            }
+            }*/
 
             List<String> lasts = new ArrayList<>();
             for (int i = 0; i < trajets.size(); i++) {

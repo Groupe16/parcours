@@ -1,12 +1,24 @@
 package com.localisation.parcours;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.localisation.parcours.database.SQLitePtMarquage;
+import com.localisation.parcours.database.SQLiteTrajet;
+import com.localisation.parcours.model.PtMarquage;
 import com.localisation.parcours.model.Trajet;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
 
 
 public class PathDetailActivity extends ActionBarActivity {
@@ -16,7 +28,7 @@ public class PathDetailActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_path_detail);
 
-        Trajet trajet = getIntent().getExtras().getParcelable("trajet");
+        final Trajet trajet = getIntent().getExtras().getParcelable("trajet");
 
         TextView adrDebutText = (TextView) findViewById(R.id.adrDebutText);
         TextView adrFinText = (TextView) findViewById(R.id.adrFinText);
@@ -37,6 +49,35 @@ public class PathDetailActivity extends ActionBarActivity {
         modLocText.setText(trajet.getModLoc());
         zoomText.setText(trajet.getZoom() + "%");
         nbrSBText.setText(trajet.getNbr_sb() + "station(s)");
+
+        SQLitePtMarquage db = new SQLitePtMarquage(this);
+
+        if (db.pointCount(trajet) > 0) {
+            final Vector<PtMarquage> points = db.getAllPoints(trajet);
+            final ListView listPoints = (ListView) findViewById(R.id.pointListView);
+
+            List<String> lasts = new ArrayList<>();
+            for (int i = 0; i < points.size(); i++) {
+                lasts.add((i + 1) + "-\t Debut: \n" + points.get(i).getIm() + " \n Fin: \n" + points.get(i).getCoord());
+            }
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, lasts);
+            listPoints.setAdapter(adapter);
+
+            listPoints.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Intent intent = new Intent(PathDetailActivity.this, PointActivity.class);
+                    intent.putExtra("point", points.get(position));
+                    intent.putExtra("mod_loc", trajet.isLoc_mode());
+                    startActivity(intent);
+                }
+            });
+
+        }else{
+            TextView msgView = (TextView) findViewById(R.id.msgTextView);
+            msgView.setText("aucun point de marquage sauvegardé");
+        }
     }
 
 
