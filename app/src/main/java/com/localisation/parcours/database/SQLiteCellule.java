@@ -119,7 +119,7 @@ public class SQLiteCellule extends SQLiteOpenHelper {
 
         String query = "SELECT * FROM " + TABLE_CELLULE;
 
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
         PtRC cellule = null;
@@ -185,7 +185,7 @@ public class SQLiteCellule extends SQLiteOpenHelper {
         int number = 0;
         String query = "SELECT count(*) FROM " + TABLE_CELLULE;
 
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {

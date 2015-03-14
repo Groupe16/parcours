@@ -102,7 +102,7 @@ public class SQLitePA extends SQLiteOpenHelper {
 
         String query = "SELECT * FROM " + TABLE_PA;
 
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
         PAWifi pa_wifi = null;
@@ -160,7 +160,7 @@ public class SQLitePA extends SQLiteOpenHelper {
         int number = 0;
         String query = "SELECT count(*) FROM " + TABLE_PA;
 
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {

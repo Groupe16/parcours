@@ -123,7 +123,7 @@ public class SQLitePtMarquage extends SQLiteOpenHelper {
 
         String query = "SELECT * FROM " + TABLE_POINT;
 
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
         PtMarquage point = null;
@@ -147,7 +147,7 @@ public class SQLitePtMarquage extends SQLiteOpenHelper {
         }
 
         Log.d("getAllPtMarquages()", points.toString());
-db.close();
+        db.close();
         return points;
     }
 
@@ -190,7 +190,7 @@ db.close();
         int number = 0;
         String query = "SELECT count(*) FROM " + TABLE_POINT;
 
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
@@ -208,7 +208,7 @@ db.close();
         int number = 0;
         String query = "SELECT count(*) FROM " + TABLE_POINT;
 
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor =
                 db.query(TABLE_POINT, COLUMNS, " id_trajet = ?", new String[] { String.valueOf(trajet.getId()) },
                         null, null, null, null);

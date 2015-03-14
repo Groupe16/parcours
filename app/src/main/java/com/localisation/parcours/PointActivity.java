@@ -9,6 +9,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.localisation.parcours.database.SQLiteCellule;
+import com.localisation.parcours.database.SQLitePA;
+import com.localisation.parcours.model.PAWifi;
 import com.localisation.parcours.model.PtMarquage;
 
 
@@ -40,7 +43,6 @@ public class PointActivity extends ActionBarActivity {
         vmText.setText(ptMarquage.getVm() + "M/m");
         dtText.setText(ptMarquage.getDt() + "Métres");
         nivBattText.setText(ptMarquage.getNiv_batt() + "%");
-
     }
 
 
@@ -69,11 +71,13 @@ public class PointActivity extends ActionBarActivity {
     public void paClick(View view){
         Intent intent;
         if (this.mod_loc) {
+            SQLitePA db = new SQLitePA(this);
             intent = new Intent(PointActivity.this, AccessPointActivity.class);
-            intent.putExtra("PAWifi", ptMarquage.getPa());
+            intent.putExtra("PAWifi", db.getPA(ptMarquage.getId()));
         }else {
+            SQLiteCellule db = new SQLiteCellule(this);
             intent = new Intent(PointActivity.this, CellActivity.class);
-            intent.putExtra("Cellule", ptMarquage.getPtRC());
+            intent.putExtra("Cellule", db.getCellule(ptMarquage.getId()));
         }
         startActivity(intent);
     }

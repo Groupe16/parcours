@@ -94,6 +94,15 @@ public class MainActivity extends ActionBarActivity {
         trajet.setFreq_pt_m(minutesPicker.getValue() * 60 + secondesPicker.getValue());
         trajet.setZoom(zoomBar.getProgress());
 
+        if (db.trajetCount() == 0){
+            SQLitePtMarquage dbpm = new SQLitePtMarquage(this);
+            dbpm.onCreate(dbpm.getWritableDatabase());
+            SQLitePA dbpa = new SQLitePA(this);
+            dbpa.onCreate(dbpm.getWritableDatabase());
+            SQLiteCellule dbrc = new SQLiteCellule(this);
+            dbrc.onCreate(dbpm.getWritableDatabase());
+        }
+
         Intent intent = new Intent(MainActivity.this, InitilalizeActivity.class);
         intent.putExtra("trajet", trajet);
         startActivity(intent);

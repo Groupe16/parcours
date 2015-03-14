@@ -25,7 +25,7 @@ public class CellActivity extends ActionBarActivity {
         TextView mncText = (TextView) findViewById(R.id.mncText);
         TextView cellIdText = (TextView) findViewById(R.id.cellIdText);
         TextView lacText = (TextView) findViewById(R.id.lacText);
-        TextView nivBattText = (TextView) findViewById(R.id.nivBattText);
+        TextView nivSigSbText = (TextView) findViewById(R.id.nivSigText);
         TextView coordText = (TextView) findViewById(R.id.coordText);
 
         typeRText.setText(cell.getType_R());
@@ -33,7 +33,7 @@ public class CellActivity extends ActionBarActivity {
         mncText.setText(cell.getmnc());
         cellIdText.setText(cell.getCell_id());
         lacText.setText(cell.getLac());
-        nivBattText.setText(cell.getNiv_sig_sb() + "%");
+        nivSigSbText.setText(cell.getNiv_sig_sb() + "%");
         coordText.setText("(" + cell.getCoord_sb().getLongitude() + "," +
                 cell.getCoord_sb().getLatitude()+ ")");
     }

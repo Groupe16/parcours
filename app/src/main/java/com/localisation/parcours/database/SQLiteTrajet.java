@@ -121,7 +121,7 @@ public class SQLiteTrajet extends SQLiteOpenHelper {
 
         String query = "SELECT * FROM " + TABLE_TRAJET;
 
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
         Trajet trajet = null;
@@ -186,16 +186,17 @@ public class SQLiteTrajet extends SQLiteOpenHelper {
         int number = 0;
         String query = "SELECT count(*) FROM " + TABLE_TRAJET;
 
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
             do {
                 number = Integer.parseInt(cursor.getString(0));
-        } while (cursor.moveToNext());
+            } while (cursor.moveToNext());
         }
 
         Log.d("trajetCount()", number + "trajets");
+
         db.close();
         return number;
     }
@@ -205,7 +206,7 @@ public class SQLiteTrajet extends SQLiteOpenHelper {
 
         String query = "SELECT * FROM " + TABLE_TRAJET + " DESC";
 
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
         Trajet trajet = null;
