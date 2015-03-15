@@ -165,7 +165,7 @@ public class MapsActivity extends FragmentActivity {
         builder.setCancelable(false);
         builder.setTitle("Confirmation");
 
-        builder.setPositiveButton("YES",
+        builder.setPositiveButton("OUI",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Intent intent = new Intent(MapsActivity.this, MainActivity.class);
@@ -173,7 +173,7 @@ public class MapsActivity extends FragmentActivity {
                     }
                 });
 
-        builder.setNegativeButton("NO",
+        builder.setNegativeButton("NON",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
