@@ -36,8 +36,8 @@ public class SQLiteCellule extends SQLiteOpenHelper {
                 "cell_id TEXT, "+
                 "lac TEXT, "+
                 "niv_sig_sb INTEGER, "+
-                "long_sb INTEGER, "+
-                "lat_sb INTEGER, "+
+                "long_sb REAL, "+
+                "lat_sb REAL, "+
                 "id_point INTEGER, "+
                 "FOREIGN KEY(id_point) REFERENCES point_marquage(id) " +
                 "ON UPDATE CASCADE)";
