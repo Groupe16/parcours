@@ -129,7 +129,7 @@ public class InitilalizeActivity extends ActionBarActivity {
         }
         db.updateTrajet(trajet);
 
-        Intent intent = new Intent(InitilalizeActivity.this, MainActivity.class);
+        Intent intent = new Intent(InitilalizeActivity.this, MapsActivity.class);
         startActivity(intent);
     }
 }

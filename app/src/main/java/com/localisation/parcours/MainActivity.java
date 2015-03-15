@@ -92,7 +92,8 @@ public class MainActivity extends ActionBarActivity {
         else
             trajet.setLoc_mode(false);
         trajet.setFreq_pt_m(minutesPicker.getValue() * 60 + secondesPicker.getValue());
-        trajet.setZoom(zoomBar.getProgress());
+
+        trajet.setZoom((int) Math.floor(zoomBar.getProgress() / 18));
 
         if (db.trajetCount() == 0){
             SQLitePtMarquage dbpm = new SQLitePtMarquage(this);

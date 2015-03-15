@@ -1,33 +1,80 @@
 package com.localisation.parcours;
 
+import android.content.Context;
+import android.content.Intent;
+import android.location.Address;
+import android.location.Criteria;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.localisation.parcours.database.SQLitePtMarquage;
 import com.localisation.parcours.database.SQLiteTrajet;
 import com.localisation.parcours.model.PtMarquage;
 import com.localisation.parcours.model.Trajet;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MapsActivity extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
 
+
+    private List<Trajet> trajets;
+    private Trajet trajet;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
 
-        Trajet trajet = new Trajet();
-        PtMarquage ptMarquage = new PtMarquage();
-//trajet.addPtM(ptMarquage);
-
         SQLiteTrajet db = new SQLiteTrajet(this);
-        db.addTrajet(trajet);
+        if (db.trajetCount() > 0) {
+            trajets = db.getLastTrajets(1);
+        }
+        trajet = trajets.get(0);
+        LoadTrajetOnMap(trajets.get(0));
+    }
 
+    private void LoadTrajetOnMap(Trajet trajet) {
+        double latitude;
+        double longitude;
+
+        List<Address> geocodesMatches = null;
+        LocationManager locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        String provider= locationManager.getBestProvider(criteria, false);
+        if(provider!= null && !provider.equals(""))
+        {
+            List<Address> addresses = null;
+            Geocoder geoCoder = new Geocoder(this);
+            try {
+                addresses = geoCoder.getFromLocationName(trajet.getAdrDebut().toString(), 1);
+                mMap.addMarker(new MarkerOptions().position(new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude())).title(trajet.getAdrDebut().toString()));
+                addresses = geoCoder.getFromLocationName(trajet.getAdrFin().toString(), 1);
+                mMap.addMarker(new MarkerOptions().position(new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude())).title(trajet.getAdrFin().toString()));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude())));
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(trajet.getZoom()));
+                Log.v("","Zoom: "+trajet.getZoom());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -71,6 +118,26 @@ public class MapsActivity extends FragmentActivity {
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+        //mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+    }
+
+
+    public void onLocationChanged(Location location)
+    {
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        Geocoder geoCoder = new Geocoder(this);
+        try
+        {
+            List<Address> matches = geoCoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+            Address bestMatch = (matches.isEmpty()? null : matches.get(0));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(trajet.getZoom()));
+            SQLitePtMarquage ptMarquage = new SQLitePtMarquage(this);
+            //
+
+        }catch(IOException e)
+        {
+
+        }
     }
 }
