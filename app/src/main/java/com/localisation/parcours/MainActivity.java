@@ -1,6 +1,11 @@
 package com.localisation.parcours;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -11,6 +16,7 @@ import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.android.gms.internal.pt;
 import com.localisation.parcours.database.SQLiteCellule;

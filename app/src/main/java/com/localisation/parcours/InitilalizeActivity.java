@@ -1,6 +1,9 @@
 package com.localisation.parcours;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -8,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.internal.pt;
 import com.localisation.parcours.database.SQLiteCellule;
@@ -70,6 +74,13 @@ public class InitilalizeActivity extends ActionBarActivity {
         SQLiteTrajet db = new SQLiteTrajet(this);
         db.addTrajet(trajet);
 
+        simulation(db);
+
+        Intent intent = new Intent(InitilalizeActivity.this, MapsActivity.class);
+        startActivity(intent);
+    }
+
+    private void simulation(SQLiteTrajet db) {
         SQLitePtMarquage dbPt = new SQLitePtMarquage(this);
         int nbrPtM = dbPt.pointCount();
         Vector<PtMarquage> ptMs;
@@ -98,12 +109,14 @@ public class InitilalizeActivity extends ActionBarActivity {
 
             if (trajet.isLoc_mode()){
                 nbrPas++;
+                WifiManager wc = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+                WifiInfo wifi = wc.getConnectionInfo();
                 paWifi = new PAWifi();
                 paWifi.setId(nbrPas);
-                paWifi.setPa(nbrPas + " pa name");
-                paWifi.setBssid(nbrPas + " BSSID");
-                paWifi.setSsid(nbrPas + " SSID");
-                paWifi.setRss(nbrPas + " RSS");
+                paWifi.setPa(wifi.getBSSID());
+                paWifi.setBssid(wifi.getSSID());
+                paWifi.setSsid(wifi.getRssi()+"");
+                paWifi.setRss(wifi.getNetworkId()+"");
                 ptMarquage.setPa(paWifi);
             }else{
                 nbrRC++;
@@ -128,8 +141,5 @@ public class InitilalizeActivity extends ActionBarActivity {
             }
         }
         db.updateTrajet(trajet);
-
-        Intent intent = new Intent(InitilalizeActivity.this, MapsActivity.class);
-        startActivity(intent);
     }
 }
