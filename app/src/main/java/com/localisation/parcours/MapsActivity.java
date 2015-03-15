@@ -1,6 +1,9 @@
 package com.localisation.parcours;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Criteria;
@@ -10,6 +13,7 @@ import android.location.LocationManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -139,5 +143,44 @@ public class MapsActivity extends FragmentActivity {
         {
 
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            //showDialog();
+            Dialog dialog = onCreateDialog();
+            dialog.show();
+        }
+        return true;
+    }
+
+    protected Dialog onCreateDialog() {
+        // Création d'un boite de dialogue
+        Dialog dialog;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setMessage("Voulez vous vraiment quitter ?");
+        builder.setCancelable(false);
+        builder.setTitle("Confirmation");
+
+        builder.setPositiveButton("YES",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Intent intent = new Intent(MapsActivity.this, MainActivity.class);
+                        startActivity(intent);
+                    }
+                });
+
+        builder.setNegativeButton("NO",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        dialog = builder.create();
+        return dialog;
     }
 }
