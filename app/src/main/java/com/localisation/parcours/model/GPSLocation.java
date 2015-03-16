@@ -1,4 +1,5 @@
 package com.localisation.parcours.model;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,29 +11,43 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+
+import com.localisation.parcours.MapsActivity;
+
 /**
  * Created by zt on 2015-03-14.
  */
 public class GPSLocation extends FragmentActivity implements LocationListener {
+
+
     private final Context mContext;
+
     // flag for GPS status
     boolean isGPSEnabled = false;
+
     // flag for network status
     boolean isNetworkEnabled = false;
+
     boolean canGetLocation = false;
+
     Location location; // location
     double latitude; // latitude
     double longitude; // longitude
     double altitude; // altitude
+    MapsActivity parentActivity;
+
     // The minimum distance to change Updates in meters
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
+
     // The minimum time between updates in milliseconds
     private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
+
     // Declaring a Location Manager
     protected LocationManager locationManager;
 
-    public GPSLocation(Context context) {
+    public GPSLocation(Context context, MapsActivity parent) {
         this.mContext = context;
+        parentActivity = parent;
         getLocation();
     }
 
@@ -40,12 +55,15 @@ public class GPSLocation extends FragmentActivity implements LocationListener {
         try {
             locationManager = (LocationManager) mContext
                     .getSystemService(LOCATION_SERVICE);
+
             // getting GPS status
             isGPSEnabled = locationManager
                     .isProviderEnabled(LocationManager.GPS_PROVIDER);
+
             // getting network status
             isNetworkEnabled = locationManager
                     .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
             if (!isGPSEnabled && !isNetworkEnabled) {
                 // no network provider is enabled
             } else {
@@ -85,9 +103,11 @@ public class GPSLocation extends FragmentActivity implements LocationListener {
                     }
                 }
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return location;
     }
 
@@ -108,6 +128,7 @@ public class GPSLocation extends FragmentActivity implements LocationListener {
         if (location != null) {
             latitude = location.getLatitude();
         }
+
         // return latitude
         return latitude;
     }
@@ -119,6 +140,7 @@ public class GPSLocation extends FragmentActivity implements LocationListener {
         if (location != null) {
             longitude = location.getLongitude();
         }
+
         // return longitude
         return longitude;
     }
@@ -128,6 +150,7 @@ public class GPSLocation extends FragmentActivity implements LocationListener {
         if (location != null) {
             longitude = location.getAltitude();
         }
+
         // return longitude
         return altitude;
     }
@@ -135,6 +158,7 @@ public class GPSLocation extends FragmentActivity implements LocationListener {
     public boolean hasAltitude() {
         return location.hasAltitude();
     }
+
 
     /**
      * Function to check GPS/wifi enabled
@@ -151,10 +175,13 @@ public class GPSLocation extends FragmentActivity implements LocationListener {
      */
     public void showSettingsAlert() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+
         // Setting Dialog Title
         alertDialog.setTitle("GPS is settings");
+
         // Setting Dialog Message
         alertDialog.setMessage("GPS is not enabled. Do you want to go to settings menu?");
+
         // On pressing Settings button
         alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
@@ -162,26 +189,33 @@ public class GPSLocation extends FragmentActivity implements LocationListener {
                 mContext.startActivity(intent);
             }
         });
+
         // on pressing cancel button
         alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
             }
         });
+
         // Showing Alert Message
         alertDialog.show();
     }
 
-        @Override
-        public void onLocationChanged (Location location){
-        }
-        @Override
-        public void onStatusChanged (String provider,int status, Bundle extras){
-        }
-        @Override
-        public void onProviderEnabled (String provider){
-        }
-        @Override
-        public void onProviderDisabled (String provider){
-        }
+
+    public void onLocationChanged(Location location) {
+        parentActivity.onLocationChanged(location);
     }
+
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    public void onProviderDisabled(String provider) {
+
+    }
+}

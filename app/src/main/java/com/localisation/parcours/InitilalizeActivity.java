@@ -85,9 +85,10 @@ public class InitilalizeActivity extends ActionBarActivity {
         SQLiteTrajet db = new SQLiteTrajet(this);
         db.addTrajet(trajet);
 
-        simulation(db);
+        //simulation(db);
 
         Intent intent = new Intent(InitilalizeActivity.this, MapsActivity.class);
+        intent.putExtra("trajet", trajet);
         startActivity(intent);
     }
 

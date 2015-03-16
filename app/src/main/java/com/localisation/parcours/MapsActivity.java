@@ -27,6 +27,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.localisation.parcours.database.SQLitePtMarquage;
 import com.localisation.parcours.database.SQLiteTrajet;
+import com.localisation.parcours.model.GPSLocation;
 import com.localisation.parcours.model.PtMarquage;
 import com.localisation.parcours.model.Trajet;
 
@@ -46,13 +47,11 @@ public class MapsActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
+        GPSLocation GPSLocator = new GPSLocation(this, MapsActivity.this);
 
-        SQLiteTrajet db = new SQLiteTrajet(this);
-        if (db.trajetCount() > 0) {
-            trajets = db.getLastTrajets(1);
-        }
-        trajet = trajets.get(0);
-        LoadTrajetOnMap(trajets.get(0));
+        Trajet trajet = getIntent().getExtras().getParcelable("trajet");
+        LoadTrajetOnMap(trajet);
+
     }
 
     private void LoadTrajetOnMap(Trajet trajet) {
@@ -68,14 +67,11 @@ public class MapsActivity extends FragmentActivity {
             List<Address> addresses = null;
             Geocoder geoCoder = new Geocoder(this);
             try {
-                addresses = geoCoder.getFromLocationName(trajet.getAdrDebut(), 1);
-                mMap.addMarker(new MarkerOptions().position(new LatLng(addresses.get(0).getLatitude(),
-                        addresses.get(0).getLongitude())).title(trajet.getAdrDebut()));
-                addresses = geoCoder.getFromLocationName(trajet.getAdrFin(), 1);
-                mMap.addMarker(new MarkerOptions().position(new LatLng(addresses.get(0).getLatitude(),
-                        addresses.get(0).getLongitude())).title(trajet.getAdrFin()));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(addresses.get(0).getLatitude(),
-                        addresses.get(0).getLongitude())));
+                addresses = geoCoder.getFromLocationName(trajet.getAdrDebut().toString(), 1);
+                mMap.addMarker(new MarkerOptions().position(new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude())).title(trajet.getAdrDebut().toString()));
+                addresses = geoCoder.getFromLocationName(trajet.getAdrFin().toString(), 1);
+                mMap.addMarker(new MarkerOptions().position(new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude())).title(trajet.getAdrFin().toString()));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude())));
                 mMap.animateCamera(CameraUpdateFactory.zoomTo(trajet.getZoom()));
                 Log.v("","Zoom: "+trajet.getZoom());
             } catch (IOException e) {
@@ -83,8 +79,6 @@ public class MapsActivity extends FragmentActivity {
             }
         }
     }
-
-
 
     @Override
     protected void onResume() {
@@ -135,8 +129,10 @@ public class MapsActivity extends FragmentActivity {
     {
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         Geocoder geoCoder = new Geocoder(this);
-        try
+        Log.v("test","test");
+        /*try
         {
+
             List<Address> matches = geoCoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
             Address bestMatch = (matches.isEmpty()? null : matches.get(0));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
@@ -147,7 +143,7 @@ public class MapsActivity extends FragmentActivity {
         }catch(IOException e)
         {
 
-        }
+        }*/
     }
 
     @Override
