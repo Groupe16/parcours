@@ -53,7 +53,8 @@ public class MapsActivity extends FragmentActivity  {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
 
-
+    private Marker markerInit;
+    private Marker markerFin;
     private List<Trajet> trajets;
     private Trajet trajet;
     private LatLng previousPosition;
@@ -83,12 +84,14 @@ public class MapsActivity extends FragmentActivity  {
             Geocoder geoCoder = new Geocoder(this);
             try {
                 addresses = geoCoder.getFromLocationName(trajet.getAdrDebut().toString(), 1);
-                Marker MarkerHandle = mMap.addMarker(new MarkerOptions().position(new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude())).title(trajet.getAdrDebut().toString()));
-                MarkerTable.put(MarkerHandle, trajet.getPtMs().get(0));
+                Marker MarkerHandle = mMap.addMarker(new MarkerOptions().position(new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude())).title(trajet.getAdrDebut().toString()).snippet(""+trajet.getNiv_init_batt()));
+                markerInit = MarkerHandle;
+                //MarkerTable.put(MarkerHandle, trajet.getPtMs().get(0));
                 previousPosition = new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude());
                 addresses = geoCoder.getFromLocationName(trajet.getAdrFin().toString(), 1);
-                MarkerHandle = mMap.addMarker(new MarkerOptions().position(new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude())).title(trajet.getAdrFin().toString()));
-                MarkerTable.put(MarkerHandle, trajet.getPtMs().get(1));
+                MarkerHandle = mMap.addMarker(new MarkerOptions().position(new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude())).title(trajet.getAdrFin().toString()).snippet("Niveau final inconnu"));
+                markerFin = MarkerHandle;
+                //MarkerTable.put(MarkerHandle, trajet.getPtMs().get(1));
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude())));
                 mMap.animateCamera(CameraUpdateFactory.zoomTo(trajet.getZoom()));
 
@@ -96,17 +99,19 @@ public class MapsActivity extends FragmentActivity  {
                     @Override
                     public boolean onMarkerClick(Marker marker) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
-                        builder.setMessage("Coordonnées: Latitude: " + MarkerTable.get(marker).getCoord().getLatitude() + " Longitude: " + MarkerTable.get(marker).getCoord().getLongitude() + " Altitude: " + MarkerTable.get(marker).getCoord().getAltitude() + "\n"
-                                + "Direction: " + MarkerTable.get(marker).getDir_dep() + "\n"
-                                + "Distance parcourus: " + MarkerTable.get(marker).getDrp() + "\n"
-                                + "Vitesse moyenne: " + MarkerTable.get(marker).getVm() + "\n"
-                                + "Distance total: " + MarkerTable.get(marker).getDt() + "\n"
-                                + "Mode localisation: " + "GPS" + "\n"
-                                + "Niveau Batterie: " + MarkerTable.get(marker).getNiv_batt())
-                                .setTitle("Données pour le point");
+                        if(MarkerTable.get(marker) != null) {
+                            builder.setMessage("Coordonnées: Latitude: " + MarkerTable.get(marker).getCoord().getLatitude() + " Longitude: " + MarkerTable.get(marker).getCoord().getLongitude() + " Altitude: " + MarkerTable.get(marker).getCoord().getAltitude() + "\n"
+                                    + "Direction: " + MarkerTable.get(marker).getDir_dep() + "\n"
+                                    + "Distance parcourus: " + MarkerTable.get(marker).getDrp() + "\n"
+                                    + "Vitesse moyenne: " + MarkerTable.get(marker).getVm() + "\n"
+                                    + "Distance total: " + MarkerTable.get(marker).getDt() + "\n"
+                                    + "Mode localisation: " + "GPS" + "\n"
+                                    + "Niveau Batterie: " + MarkerTable.get(marker).getNiv_batt())
+                                    .setTitle("Données pour le point");
 
-                        AlertDialog dialog = builder.create();
-                        dialog.show();
+                            AlertDialog dialog = builder.create();
+                            dialog.show();
+                        }
                         return false;
                     }
                 });

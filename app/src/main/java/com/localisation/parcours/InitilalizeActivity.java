@@ -102,75 +102,7 @@ public class InitilalizeActivity extends ActionBarActivity {
 
             //simulation(db);
 
-            SQLitePtMarquage dbPt = new SQLitePtMarquage(this);
-            int nbrPtM = dbPt.pointCount();
-            SQLitePA dbPa = new SQLitePA(this);
-            SQLiteCellule dbCell = new SQLiteCellule(this);
-            PtMarquage ptMarquage;
-            ptMarquage = new PtMarquage();
-            ptMarquage.setId(nbrPtM);
-            ptMarquage.setIm(new Time(System.currentTimeMillis()));
-            ptMarquage.setCoord(new Coord(addresses.get(0).getLatitude(), addresses.get(0).getLongitude(), 0.0));
-            ptMarquage.setNiv_batt(trajet.getNiv_init_batt());
-            ptMarquage.setDt(0);
-            ptMarquage.setDir_dep("N/A");
-            ptMarquage.setDrp(0);
-            ptMarquage.setVm(0);
-            if (trajet.isLoc_mode()){
-                int nbrPas = dbPa.paCount();
-                PAWifi paWifi;
-                nbrPas++;
-                WifiManager wc = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-                WifiInfo wifi = wc.getConnectionInfo();
-                paWifi = new PAWifi();
-                paWifi.setId(nbrPas);
-                paWifi.setPa(wifi.getBSSID());
-                paWifi.setBssid(wifi.getSSID());
-                paWifi.setSsid(wifi.getRssi()+"");
-                paWifi.setRss(wifi.getNetworkId()+"");
-                ptMarquage.setPa(paWifi);
-            }
-            /*else{
-                int nbrRC = dbCell.cellCount();
-                PtRC ptRC;
-                nbrRC++;
-                ptRC = new PtRC();
-                ptRC.setId(nbrRC);
-                ptRC.setType_R(nbrRC + " type R");
-                ptRC.setNiv_sig_sb(57);
-                ptRC.setLac(nbrRC + " LAC");
-                ptRC.setmnc(nbrRC + " MNC");
-                ptRC.setMcc(nbrRC + " MCC");
-                ptRC.setCell_id(nbrRC + " CELL ID");
-                ptRC.setCoord_sb(new Coord(location.getLongitude(), location.getLatitude()));
-                ptMarquage.setPtRC(ptRC);
-            }*/
 
-            trajet.addPoint(ptMarquage);
-
-            ptMarquage = new PtMarquage();
-            ptMarquage.setId(100);
-            ptMarquage.setIm(new Time(System.currentTimeMillis()));
-            ptMarquage.setCoord(new Coord(addresses1.get(0).getLatitude(), addresses1.get(0).getLongitude(), 0.0));
-            ptMarquage.setNiv_batt(trajet.getNiv_init_batt());
-            ptMarquage.setDt(0);
-            ptMarquage.setDir_dep("N/A");
-            ptMarquage.setDrp(0);
-            ptMarquage.setVm(0);
-            if (trajet.isLoc_mode()){
-                int nbrPas = dbPa.paCount();
-                PAWifi paWifi;
-                nbrPas++;
-                WifiManager wc = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-                WifiInfo wifi = wc.getConnectionInfo();
-                paWifi = new PAWifi();
-                paWifi.setId(nbrPas);
-                paWifi.setPa(wifi.getBSSID());
-                paWifi.setBssid(wifi.getSSID());
-                paWifi.setSsid(wifi.getRssi()+"");
-                paWifi.setRss(wifi.getNetworkId()+"");
-                ptMarquage.setPa(paWifi);
-            }
 
 
             Intent intent = new Intent(InitilalizeActivity.this, MapsActivity.class);
@@ -185,6 +117,7 @@ public class InitilalizeActivity extends ActionBarActivity {
         int nbrPtM = dbPt.pointCount();
         SQLitePA dbPa = new SQLitePA(this);
         int nbrPas = dbPa.paCount();
+
         PAWifi paWifi;
         SQLiteCellule dbCell = new SQLiteCellule(this);
         int nbrRC = dbCell.cellCount();
