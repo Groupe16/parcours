@@ -2,8 +2,10 @@ package com.localisation.parcours;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.BatteryManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -40,16 +42,6 @@ public class InitilalizeActivity extends ActionBarActivity {
 
         trajet = getIntent().getExtras().getParcelable("trajet");
 
-        new Thread(new Runnable() {
-            public void run() {
-
-                try {
-                    Thread.sleep(4000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
     }
 
 
@@ -75,12 +67,16 @@ public class InitilalizeActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    Intent batteryStatus;
     public void startClick(View view){
 
         EditText startEditText = (EditText) findViewById(R.id.startAddressEditText);
         trajet.setAdrDebut(startEditText.getText().toString());
         EditText endEditText = (EditText) findViewById(R.id.endAddressEditText);
         trajet.setAdrFin(endEditText.getText().toString());
+        IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        batteryStatus = this.registerReceiver(null, ifilter);
+        trajet.setNiv_init_batt(batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1));
         trajet.setNiv_fin_batt(trajet.getNiv_init_batt());
         SQLiteTrajet db = new SQLiteTrajet(this);
         db.addTrajet(trajet);
