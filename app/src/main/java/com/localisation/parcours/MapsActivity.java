@@ -257,15 +257,12 @@ public class MapsActivity extends FragmentActivity {
                 + "Niveau Batterie: " + pt.getNiv_batt()));*/
     }
 
-
-
-
     protected Dialog onCreateDialog() {
         // Création d'un boite de dialogue
         Dialog dialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        builder.setMessage("Voulez vous vraiment quitter ?");
+        builder.setMessage("Voulez vous vraiment arrêter le parcours ?");
         builder.setCancelable(false);
         builder.setTitle("Confirmation");
 
