@@ -136,9 +136,6 @@ public class MapsActivity extends FragmentActivity {
     Intent batteryStatus;
     public void onLocationChanged(Location location)
     {
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        Geocoder geoCoder = new Geocoder(this);
-
         SQLitePtMarquage dbPt = new SQLitePtMarquage(this);
         int nbrPtM = dbPt.pointCount();
         SQLitePA dbPa = new SQLitePA(this);
