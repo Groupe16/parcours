@@ -85,6 +85,7 @@ public class InitilalizeActivity extends ActionBarActivity {
 
         Intent intent = new Intent(InitilalizeActivity.this, MapsActivity.class);
         intent.putExtra("trajet", trajet);
+        InitilalizeActivity.this.finish();
         startActivity(intent);
     }
 

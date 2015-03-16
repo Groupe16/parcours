@@ -284,6 +284,7 @@ public class MapsActivity extends FragmentActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Intent intent = new Intent(MapsActivity.this, MainActivity.class);
+                        MapsActivity.this.finish();
                         startActivity(intent);
                     }
                 });
