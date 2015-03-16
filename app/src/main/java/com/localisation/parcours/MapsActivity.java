@@ -89,6 +89,7 @@ public class MapsActivity extends FragmentActivity {
                 e.printStackTrace();
             }
         }
+        Log.v("Old Position", previousPosition.toString());
     }
 
     @Override
