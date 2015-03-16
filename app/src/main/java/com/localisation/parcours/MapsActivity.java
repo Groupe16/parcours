@@ -45,9 +45,11 @@ import com.localisation.parcours.model.Trajet;
 import java.io.IOException;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.List;
 
-public class MapsActivity extends FragmentActivity {
+public class MapsActivity extends FragmentActivity  {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
 
@@ -81,12 +83,33 @@ public class MapsActivity extends FragmentActivity {
             Geocoder geoCoder = new Geocoder(this);
             try {
                 addresses = geoCoder.getFromLocationName(trajet.getAdrDebut().toString(), 1);
-                mMap.addMarker(new MarkerOptions().position(new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude())).title(trajet.getAdrDebut().toString()));
+                Marker MarkerHandle = mMap.addMarker(new MarkerOptions().position(new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude())).title(trajet.getAdrDebut().toString()));
+                //MarkerTable.put(MarkerHandle, trajet.getPtMs().get(0));
                 previousPosition = new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude());
                 addresses = geoCoder.getFromLocationName(trajet.getAdrFin().toString(), 1);
-                mMap.addMarker(new MarkerOptions().position(new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude())).title(trajet.getAdrFin().toString()));
+                MarkerHandle = mMap.addMarker(new MarkerOptions().position(new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude())).title(trajet.getAdrFin().toString()));
+                //MarkerTable.put(MarkerHandle, trajet.getPtMs().get(1));
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude())));
                 mMap.animateCamera(CameraUpdateFactory.zoomTo(trajet.getZoom()));
+
+                mMap.setOnMarkerClickListener(new OnMarkerClickListener() {
+                    @Override
+                    public boolean onMarkerClick(Marker marker) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
+                        builder.setMessage("Coordonnées: Latitude: " + MarkerTable.get(marker).getCoord().getLatitude() + " Longitude: " + MarkerTable.get(marker).getCoord().getLongitude() + " Altitude: " + MarkerTable.get(marker).getCoord().getAltitude() + "\n"
+                                + "Direction: " + MarkerTable.get(marker).getDir_dep() + "\n"
+                                + "Distance parcourus: " + MarkerTable.get(marker).getDrp() + "\n"
+                                + "Vitesse moyenne: " + MarkerTable.get(marker).getVm() + "\n"
+                                + "Distance total: " + MarkerTable.get(marker).getDt() + "\n"
+                                + "Mode localisation: " + "GPS" + "\n"
+                                + "Niveau Batterie: " + MarkerTable.get(marker).getNiv_batt())
+                                .setTitle("Données pour le point");
+
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+                        return false;
+                    }
+                });
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -230,8 +253,13 @@ public class MapsActivity extends FragmentActivity {
         return true;
     }
 
+
+    Dictionary<Marker, PtMarquage> MarkerTable = new Hashtable<Marker, PtMarquage>();
+
+
     public void AddPtMarquageToMap(PtMarquage pt)
     {
+        final PtMarquage _pt = pt;
         LatLng latLng = new LatLng(pt.getCoord().getLatitude(), pt.getCoord().getLongitude());
         Geocoder geoCoder = new Geocoder(this);
         try
@@ -247,8 +275,8 @@ public class MapsActivity extends FragmentActivity {
                     .width(5)
                     .color(Color.RED));
 
+            MarkerTable.put(markerHandle, _pt);
 
-            mMap.setOnMarkerClickListener((OnMarkerClickListener) this);
             previousPosition = new LatLng(bestMatch.getLatitude(), bestMatch.getLongitude());
         }catch(IOException e)
         {
@@ -262,14 +290,6 @@ public class MapsActivity extends FragmentActivity {
                 + "Niveau Batterie: " + pt.getNiv_batt()));*/
     }
 
-
-    /**
-     * handle marker click event
-     */
-    public boolean onMarkerClick(Marker marker) {
-            Log.w("Click", "test");
-            return true;
-    }
 
     protected Dialog onCreateDialog() {
         // Création d'un boite de dialogue
