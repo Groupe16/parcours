@@ -39,6 +39,7 @@
 
         <activity
             android:name=".MapsActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_maps" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -46,26 +47,32 @@
         </activity>
         <activity
             android:name=".HistoryActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_history" >
         </activity>
         <activity
             android:name=".InitilalizeActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_initilalize">
         </activity>
         <activity
             android:name=".PointActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_point" >
         </activity>
         <activity
             android:name=".AccessPointActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_access_point" >
         </activity>
         <activity
             android:name=".CellActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_cell" >
         </activity>
         <activity
             android:name=".PathDetailActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_path_detail" >
         </activity>
     </application>
