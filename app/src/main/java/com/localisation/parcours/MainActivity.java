@@ -94,29 +94,33 @@ public class MainActivity extends ActionBarActivity {
         NumberPicker secondesPicker = (NumberPicker) this.findViewById(R.id.secondesPicker);
         SeekBar zoomBar = (SeekBar) findViewById(R.id.zoomSeekBar);
 
-        SQLiteTrajet db = new SQLiteTrajet(this);
-        Trajet trajet = new Trajet();
-        trajet.setId(db.trajetCount() + 1);
-        if (modSpinner.getSelectedItemId() == 0)
-            trajet.setLoc_mode(true);
-        else
-            trajet.setLoc_mode(false);
-        trajet.setFreq_pt_m(minutesPicker.getValue() * 60 + secondesPicker.getValue());
+        if (minutesPicker.getValue() + secondesPicker.getValue() == 0) {
+            Toast.makeText(MainActivity.this, "la fréquence ne doit pas être nulle", Toast.LENGTH_SHORT).show();
+        }else {
+            SQLiteTrajet db = new SQLiteTrajet(this);
+            Trajet trajet = new Trajet();
+            trajet.setId(db.trajetCount() + 1);
+            if (modSpinner.getSelectedItemId() == 0)
+                trajet.setLoc_mode(true);
+            else
+                trajet.setLoc_mode(false);
+            trajet.setFreq_pt_m(minutesPicker.getValue() * 60 + secondesPicker.getValue());
 
-        trajet.setZoom(zoomBar.getProgress());
+            trajet.setZoom(zoomBar.getProgress());
 
-        if (db.trajetCount() == 0){
-            SQLitePtMarquage dbpm = new SQLitePtMarquage(this);
-            dbpm.onCreate(dbpm.getWritableDatabase());
-            SQLitePA dbpa = new SQLitePA(this);
-            dbpa.onCreate(dbpm.getWritableDatabase());
-            SQLiteCellule dbrc = new SQLiteCellule(this);
-            dbrc.onCreate(dbpm.getWritableDatabase());
+            if (db.trajetCount() == 0) {
+                SQLitePtMarquage dbpm = new SQLitePtMarquage(this);
+                dbpm.onCreate(dbpm.getWritableDatabase());
+                SQLitePA dbpa = new SQLitePA(this);
+                dbpa.onCreate(dbpm.getWritableDatabase());
+                SQLiteCellule dbrc = new SQLiteCellule(this);
+                dbrc.onCreate(dbpm.getWritableDatabase());
+            }
+
+            Intent intent = new Intent(MainActivity.this, InitilalizeActivity.class);
+            intent.putExtra("trajet", trajet);
+            startActivity(intent);
         }
-
-        Intent intent = new Intent(MainActivity.this, InitilalizeActivity.class);
-        intent.putExtra("trajet", trajet);
-        startActivity(intent);
     }
 
     public void historyClick(View view){
