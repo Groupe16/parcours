@@ -68,11 +68,14 @@ public class MapsActivity extends FragmentActivity {
             List<Address> addresses = null;
             Geocoder geoCoder = new Geocoder(this);
             try {
-                addresses = geoCoder.getFromLocationName(trajet.getAdrDebut().toString(), 1);
-                mMap.addMarker(new MarkerOptions().position(new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude())).title(trajet.getAdrDebut().toString()));
-                addresses = geoCoder.getFromLocationName(trajet.getAdrFin().toString(), 1);
-                mMap.addMarker(new MarkerOptions().position(new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude())).title(trajet.getAdrFin().toString()));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude())));
+                addresses = geoCoder.getFromLocationName(trajet.getAdrDebut(), 1);
+                mMap.addMarker(new MarkerOptions().position(new LatLng(addresses.get(0).getLatitude(),
+                        addresses.get(0).getLongitude())).title(trajet.getAdrDebut()));
+                addresses = geoCoder.getFromLocationName(trajet.getAdrFin(), 1);
+                mMap.addMarker(new MarkerOptions().position(new LatLng(addresses.get(0).getLatitude(),
+                        addresses.get(0).getLongitude())).title(trajet.getAdrFin()));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(addresses.get(0).getLatitude(),
+                        addresses.get(0).getLongitude())));
                 mMap.animateCamera(CameraUpdateFactory.zoomTo(trajet.getZoom()));
                 Log.v("","Zoom: "+trajet.getZoom());
             } catch (IOException e) {
@@ -80,6 +83,8 @@ public class MapsActivity extends FragmentActivity {
             }
         }
     }
+
+
 
     @Override
     protected void onResume() {

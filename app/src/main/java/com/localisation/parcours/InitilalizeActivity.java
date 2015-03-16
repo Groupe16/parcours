@@ -39,6 +39,17 @@ public class InitilalizeActivity extends ActionBarActivity {
         setContentView(R.layout.activity_initilalize);
 
         trajet = getIntent().getExtras().getParcelable("trajet");
+
+        new Thread(new Runnable() {
+            public void run() {
+
+                try {
+                    Thread.sleep(4000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
 
