@@ -39,11 +39,10 @@
         android:layout_height="wrap_content"
         android:text="Commencer"
         android:id="@+id/startButton"
+        android:layout_marginTop="43dp"
+        android:onClick="startClick"
         android:layout_below="@+id/zoomSeekBar"
-        android:layout_toRightOf="@+id/textView"
-        android:layout_toEndOf="@+id/textView"
-        android:layout_marginTop="37dp"
-        android:onClick="startClick"/>
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="wrap_content"

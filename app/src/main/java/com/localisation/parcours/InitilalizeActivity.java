@@ -3,6 +3,8 @@ package com.localisation.parcours;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
@@ -26,8 +28,10 @@ import com.localisation.parcours.model.PtMarquage;
 import com.localisation.parcours.model.PtRC;
 import com.localisation.parcours.model.Trajet;
 
+import java.io.IOException;
 import java.sql.Date;
 import java.sql.Time;
+import java.util.List;
 import java.util.Vector;
 
 
@@ -78,15 +82,31 @@ public class InitilalizeActivity extends ActionBarActivity {
         batteryStatus = this.registerReceiver(null, ifilter);
         trajet.setNiv_init_batt(batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1));
         trajet.setNiv_fin_batt(trajet.getNiv_init_batt());
-        SQLiteTrajet db = new SQLiteTrajet(this);
-        db.addTrajet(trajet);
 
-        //simulation(db);
+        List<Address> addresses = null, addresses1 = null;
+        Geocoder geoCoder = new Geocoder(this);
+        try {
+            addresses = geoCoder.getFromLocationName(trajet.getAdrDebut().toString(), 1);
+            addresses1 = geoCoder.getFromLocationName(trajet.getAdrFin().toString(), 1);
+        } catch (IOException e) {
+            Toast.makeText(InitilalizeActivity.this, "adresses incorrectes", Toast.LENGTH_SHORT).show();
+        }
+        if(addresses == null || addresses.size() == 0){
+            Toast.makeText(InitilalizeActivity.this, "adresse début introuvable", Toast.LENGTH_SHORT).show();
+        }else if(addresses1 == null || addresses1.size() == 0){
+            Toast.makeText(InitilalizeActivity.this, "adresse fin introuvable", Toast.LENGTH_SHORT).show();
+        }else {
 
-        Intent intent = new Intent(InitilalizeActivity.this, MapsActivity.class);
-        intent.putExtra("trajet", trajet);
-        InitilalizeActivity.this.finish();
-        startActivity(intent);
+            SQLiteTrajet db = new SQLiteTrajet(this);
+            db.addTrajet(trajet);
+
+            //simulation(db);
+
+            Intent intent = new Intent(InitilalizeActivity.this, MapsActivity.class);
+            intent.putExtra("trajet", trajet);
+            InitilalizeActivity.this.finish();
+            startActivity(intent);
+        }
     }
 
     private void simulation(SQLiteTrajet db) {

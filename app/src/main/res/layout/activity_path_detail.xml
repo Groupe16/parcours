@@ -178,13 +178,14 @@
         android:layout_alignEnd="@+id/adrDebutText" />
 
     <ListView
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/pointListView"
         android:layout_below="@+id/nbrSBText"
         android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/nbrSBText"
-        android:layout_toStartOf="@+id/nbrSBText" />
+        android:layout_toStartOf="@+id/nbrSBText"
+        android:layout_alignRight="@+id/nbrSBText"
+        android:layout_alignEnd="@+id/nbrSBText" />
 
     <TextView
         android:layout_width="wrap_content"
