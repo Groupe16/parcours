@@ -25,9 +25,11 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.localisation.parcours.database.SQLiteCellule;
 import com.localisation.parcours.database.SQLitePA;
 import com.localisation.parcours.database.SQLitePtMarquage;
@@ -239,11 +241,14 @@ public class MapsActivity extends FragmentActivity {
             Address bestMatch = (matches.isEmpty()? null : matches.get(0));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             mMap.animateCamera(CameraUpdateFactory.zoomTo(trajet.getZoom()));
-            mMap.addMarker(new MarkerOptions().position(new LatLng(bestMatch.getLatitude(), bestMatch.getLongitude())).title(bestMatch.getAddressLine(0).toString()));
+            Marker markerHandle = mMap.addMarker(new MarkerOptions().position(new LatLng(bestMatch.getLatitude(), bestMatch.getLongitude())).title(bestMatch.getAddressLine(0).toString()));
             Polyline line = mMap.addPolyline(new PolylineOptions()
                     .add(previousPosition, new LatLng(bestMatch.getLatitude(), bestMatch.getLongitude()))
                     .width(5)
                     .color(Color.RED));
+
+
+            mMap.setOnMarkerClickListener((OnMarkerClickListener) this);
             previousPosition = new LatLng(bestMatch.getLatitude(), bestMatch.getLongitude());
         }catch(IOException e)
         {
@@ -255,6 +260,15 @@ public class MapsActivity extends FragmentActivity {
                 + "Distance total: " + pt.getDt() + "\n"
                 + "Mode localisation: " + "GPS" + "\n"
                 + "Niveau Batterie: " + pt.getNiv_batt()));*/
+    }
+
+
+    /**
+     * handle marker click event
+     */
+    public boolean onMarkerClick(Marker marker) {
+            Log.w("Click", "test");
+            return true;
     }
 
     protected Dialog onCreateDialog() {
