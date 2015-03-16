@@ -47,7 +47,7 @@ public class PathDetailActivity extends ActionBarActivity {
         nivFinBattText.setText(trajet.getNiv_fin_batt() + "%");
         frequenceText.setText(trajet.getFreq_pt_m() + "s");
         modLocText.setText(trajet.getModLoc());
-        zoomText.setText(trajet.getZoom() + "%");
+        zoomText.setText((trajet.getZoom() * 100 / 18) + "%");
         nbrSBText.setText(trajet.getNbr_sb() + "station(s)");
 
         SQLitePtMarquage db = new SQLitePtMarquage(this);
