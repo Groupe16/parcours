@@ -11,6 +11,7 @@ import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.media.MediaPlayer;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
@@ -196,8 +197,21 @@ public class MapsActivity extends FragmentActivity {
         SQLiteTrajet db = new SQLiteTrajet(this);
         db.updateTrajet(trajet);
 
+        playSound(R.raw.up);
+
         Log.v("createPtMarquage", ptMarquage.toString());
     }
+
+    private MediaPlayer mPlayer = null;
+    private void playSound(int resId) {
+        if(mPlayer != null) {
+            mPlayer.stop();
+            mPlayer.release();
+        }
+        mPlayer = MediaPlayer.create(this, resId);
+        mPlayer.start();
+    }
+
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)
