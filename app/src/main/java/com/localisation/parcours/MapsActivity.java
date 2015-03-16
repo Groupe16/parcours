@@ -84,11 +84,11 @@ public class MapsActivity extends FragmentActivity  {
             try {
                 addresses = geoCoder.getFromLocationName(trajet.getAdrDebut().toString(), 1);
                 Marker MarkerHandle = mMap.addMarker(new MarkerOptions().position(new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude())).title(trajet.getAdrDebut().toString()));
-                //MarkerTable.put(MarkerHandle, trajet.getPtMs().get(0));
+                MarkerTable.put(MarkerHandle, trajet.getPtMs().get(0));
                 previousPosition = new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude());
                 addresses = geoCoder.getFromLocationName(trajet.getAdrFin().toString(), 1);
                 MarkerHandle = mMap.addMarker(new MarkerOptions().position(new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude())).title(trajet.getAdrFin().toString()));
-                //MarkerTable.put(MarkerHandle, trajet.getPtMs().get(1));
+                MarkerTable.put(MarkerHandle, trajet.getPtMs().get(1));
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude())));
                 mMap.animateCamera(CameraUpdateFactory.zoomTo(trajet.getZoom()));
 
