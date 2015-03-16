@@ -91,7 +91,6 @@ public class InitilalizeActivity extends ActionBarActivity {
     private void simulation(SQLiteTrajet db) {
         SQLitePtMarquage dbPt = new SQLitePtMarquage(this);
         int nbrPtM = dbPt.pointCount();
-        Vector<PtMarquage> ptMs;
         SQLitePA dbPa = new SQLitePA(this);
         int nbrPas = dbPa.paCount();
         PAWifi paWifi;
