@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -40,6 +41,7 @@ import com.localisation.parcours.model.PAWifi;
 import com.localisation.parcours.model.PtMarquage;
 import com.localisation.parcours.model.PtRC;
 import com.localisation.parcours.model.Trajet;
+import com.localisation.parcours.model.Accelerometer;
 
 
 import java.io.IOException;
@@ -49,7 +51,13 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
 
-public class MapsActivity extends FragmentActivity  {
+
+
+
+public class MapsActivity extends FragmentActivity {
+
+
+
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
 
@@ -58,21 +66,22 @@ public class MapsActivity extends FragmentActivity  {
     private List<Trajet> trajets;
     private Trajet trajet;
     private LatLng previousPosition;
+    int DistanceTotal = 0;
+    Accelerometer accelerometer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
         GPSLocation GPSLocator = new GPSLocation(this, MapsActivity.this);
-
+        accelerometer = new Accelerometer();
         trajet = getIntent().getExtras().getParcelable("trajet");
         LoadTrajetOnMap(trajet);
 
     }
 
     private void LoadTrajetOnMap(Trajet trajet) {
-        double latitude;
-        double longitude;
+
 
         List<Address> geocodesMatches = null;
         LocationManager locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
@@ -84,7 +93,7 @@ public class MapsActivity extends FragmentActivity  {
             Geocoder geoCoder = new Geocoder(this);
             try {
                 addresses = geoCoder.getFromLocationName(trajet.getAdrDebut().toString(), 1);
-                Marker MarkerHandle = mMap.addMarker(new MarkerOptions().position(new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude())).title(trajet.getAdrDebut().toString()).snippet(""+trajet.getNiv_init_batt()));
+                Marker MarkerHandle = mMap.addMarker(new MarkerOptions().position(new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude())).title(trajet.getAdrDebut().toString()).snippet("" + trajet.getNiv_init_batt()));
                 markerInit = MarkerHandle;
                 //MarkerTable.put(MarkerHandle, trajet.getPtMs().get(0));
                 previousPosition = new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude());
@@ -182,11 +191,33 @@ public class MapsActivity extends FragmentActivity  {
         batteryStatus = this.registerReceiver(null, ifilter);
         ptMarquage.setNiv_batt(batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1));
         trajet.setNiv_fin_batt(ptMarquage.getNiv_batt());
-        //TODO distance, direction dep et vitesse
-        ptMarquage.setDt((int) (Math.random() * 10000));
-        ptMarquage.setDir_dep("Nord Est");
-        ptMarquage.setDrp((int) (Math.random() * 10000));
-        ptMarquage.setVm((int) (Math.random() * 1000));
+        int distance = accelerometer.GetNumberOfStepSinceLast();
+        //Quick workaround. This is obviously going to break at 360/0
+        double diffLatitude = location.getLatitude() - previousPosition.latitude;
+        double diffLongtitude = location.getLongitude() - previousPosition.longitude;
+        String LongitudeString = "";
+        String LatitudeString = "";
+        if(diffLongtitude > 0)
+        {
+            LongitudeString = "Ouest";
+        }
+        else if(diffLongtitude < 0)
+        {
+            LongitudeString = "Est";
+        }
+        if(diffLatitude > 0)
+        {
+            LongitudeString = "Nord";
+        }
+        else if(diffLatitude < 0)
+        {
+            LongitudeString = "Sud";
+        }
+        DistanceTotal += distance;
+        ptMarquage.setDt(DistanceTotal);
+        ptMarquage.setDir_dep(LatitudeString + " " + LongitudeString);
+        ptMarquage.setDrp(distance);
+        ptMarquage.setVm(distance/trajet.getFreq_pt_m());
         /////////////////////////////////////////////////
 
         if (trajet.isLoc_mode()){
