@@ -73,7 +73,6 @@ public class MapsActivity extends FragmentActivity {
                 mMap.addMarker(new MarkerOptions().position(new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude())).title(trajet.getAdrFin().toString()));
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude())));
                 mMap.animateCamera(CameraUpdateFactory.zoomTo(trajet.getZoom()));
-                Log.v("","Zoom: "+trajet.getZoom());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -127,23 +126,8 @@ public class MapsActivity extends FragmentActivity {
 
     public void onLocationChanged(Location location)
     {
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        Geocoder geoCoder = new Geocoder(this);
-        Log.v("test","test");
-        /*try
-        {
 
-            List<Address> matches = geoCoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
-            Address bestMatch = (matches.isEmpty()? null : matches.get(0));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(trajet.getZoom()));
-            SQLitePtMarquage ptMarquage = new SQLitePtMarquage(this);
-            //
 
-        }catch(IOException e)
-        {
-
-        }*/
     }
 
     @Override
@@ -156,6 +140,34 @@ public class MapsActivity extends FragmentActivity {
         }
         return true;
     }
+
+    public void AddPtMarquageToMap(PtMarquage pt)
+    {
+        LatLng latLng = new LatLng(pt.getCoord().getLatitude(), pt.getCoord().getLongitude());
+        Geocoder geoCoder = new Geocoder(this);
+        try
+        {
+
+            List<Address> matches = geoCoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+            Address bestMatch = (matches.isEmpty()? null : matches.get(0));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(trajet.getZoom()));
+            mMap.addMarker(new MarkerOptions().position(new LatLng(bestMatch.getLatitude(), bestMatch.getLongitude())).title(bestMatch.getAddressLine(0).toString()));
+
+        }catch(IOException e)
+        {
+        }
+        /*.snippet("Coordonées: Latitude: " + pt.getCoord().getLatitude() + " Longitude: " + pt.getCoord().getLongitude() + " Altitude: " + pt.getCoord().getAltitude() + "\n"
+        + "Direction: " + pt.getDir_dep() + "\n"
+                + "Distance parcourus: " + pt.getDrp() + "\n"
+                + "Vitesse moyenne: " + pt.getVm() + "\n"
+                + "Distance total: " + pt.getDt() + "\n"
+                + "Mode localisation: " + "GPS" + "\n"
+                + "Niveau Batterie: " + pt.getNiv_batt()));*/
+    }
+
+
+
 
     protected Dialog onCreateDialog() {
         // Création d'un boite de dialogue
