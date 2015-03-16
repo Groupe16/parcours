@@ -19,11 +19,6 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -185,6 +180,8 @@ public class MapsActivity extends FragmentActivity {
             ptRC.setCoord_sb(new Coord(location.getLongitude(), location.getLatitude()));
             ptMarquage.setPtRC(ptRC);
         }
+
+        AddPtMarquageToMap(ptMarquage);
         trajet.addPoint(ptMarquage);
         dbPt.addPoint(ptMarquage, trajet);
         //si Mod_Loc = GPS
@@ -236,6 +233,7 @@ public class MapsActivity extends FragmentActivity {
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             mMap.animateCamera(CameraUpdateFactory.zoomTo(trajet.getZoom()));
             mMap.addMarker(new MarkerOptions().position(new LatLng(bestMatch.getLatitude(), bestMatch.getLongitude())).title(bestMatch.getAddressLine(0).toString()));
+
 
         }catch(IOException e)
         {
