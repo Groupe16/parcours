@@ -5,11 +5,15 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.os.BatteryManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,13 +29,19 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.localisation.parcours.database.SQLiteCellule;
+import com.localisation.parcours.database.SQLitePA;
 import com.localisation.parcours.database.SQLitePtMarquage;
 import com.localisation.parcours.database.SQLiteTrajet;
+import com.localisation.parcours.model.Coord;
 import com.localisation.parcours.model.GPSLocation;
+import com.localisation.parcours.model.PAWifi;
 import com.localisation.parcours.model.PtMarquage;
+import com.localisation.parcours.model.PtRC;
 import com.localisation.parcours.model.Trajet;
 
 import java.io.IOException;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +59,7 @@ public class MapsActivity extends FragmentActivity {
         setUpMapIfNeeded();
         GPSLocation GPSLocator = new GPSLocation(this, MapsActivity.this);
 
-        Trajet trajet = getIntent().getExtras().getParcelable("trajet");
+        trajet = getIntent().getExtras().getParcelable("trajet");
         LoadTrajetOnMap(trajet);
 
     }
@@ -123,11 +133,73 @@ public class MapsActivity extends FragmentActivity {
         //mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
     }
 
-
+    Intent batteryStatus;
     public void onLocationChanged(Location location)
     {
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        Geocoder geoCoder = new Geocoder(this);
 
+        SQLitePtMarquage dbPt = new SQLitePtMarquage(this);
+        int nbrPtM = dbPt.pointCount();
+        SQLitePA dbPa = new SQLitePA(this);
+        SQLiteCellule dbCell = new SQLiteCellule(this);
+        PtMarquage ptMarquage = new PtMarquage();
 
+        ptMarquage.setId(nbrPtM + 1);
+        ptMarquage.setIm(new Time(System.currentTimeMillis()));
+        ptMarquage.setCoord(new Coord(location.getLongitude(), location.getLatitude(), location.getAltitude()));
+        IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        batteryStatus = this.registerReceiver(null, ifilter);
+        ptMarquage.setNiv_batt(batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1));
+        trajet.setNiv_fin_batt(ptMarquage.getNiv_batt());
+        //TODO distance, direction dep et vitesse
+        ptMarquage.setDt((int) (Math.random() * 10000));
+        ptMarquage.setDir_dep("Nord Est");
+        ptMarquage.setDrp((int) (Math.random() * 10000));
+        ptMarquage.setVm((int) (Math.random() * 1000));
+        /////////////////////////////////////////////////
+
+        if (trajet.isLoc_mode()){
+            int nbrPas = dbPa.paCount();
+            PAWifi paWifi;
+            nbrPas++;
+            WifiManager wc = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+            WifiInfo wifi = wc.getConnectionInfo();
+            paWifi = new PAWifi();
+            paWifi.setId(nbrPas);
+            paWifi.setPa(wifi.getBSSID());
+            paWifi.setBssid(wifi.getSSID());
+            paWifi.setSsid(wifi.getRssi()+"");
+            paWifi.setRss(wifi.getNetworkId()+"");
+            ptMarquage.setPa(paWifi);
+        }else{
+            int nbrRC = dbCell.cellCount();
+            PtRC ptRC;
+            nbrRC++;
+            ptRC = new PtRC();
+            ptRC.setId(nbrRC);
+            ptRC.setType_R(nbrRC + " type R");
+            ptRC.setNiv_sig_sb(57);
+            ptRC.setLac(nbrRC + " LAC");
+            ptRC.setmnc(nbrRC + " MNC");
+            ptRC.setMcc(nbrRC + " MCC");
+            ptRC.setCell_id(nbrRC + " CELL ID");
+            ptRC.setCoord_sb(new Coord(location.getLongitude(), location.getLatitude()));
+            ptMarquage.setPtRC(ptRC);
+        }
+        trajet.addPoint(ptMarquage);
+        dbPt.addPoint(ptMarquage, trajet);
+        //si Mod_Loc = GPS
+        if (trajet.isLoc_mode()) {
+            dbPa.addPA(ptMarquage.getPa(), ptMarquage.getId());
+        }else{//si Mod_Loc = reseau cellulaire
+            dbCell.addCellule(ptMarquage.getPtRC(), ptMarquage.getId());
+        }
+
+        SQLiteTrajet db = new SQLiteTrajet(this);
+        db.updateTrajet(trajet);
+
+        Log.v("createPtMarquage", ptMarquage.toString());
     }
 
     @Override
