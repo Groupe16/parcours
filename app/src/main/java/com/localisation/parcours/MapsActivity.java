@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -25,6 +26,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.localisation.parcours.database.SQLiteCellule;
 import com.localisation.parcours.database.SQLitePA;
 import com.localisation.parcours.database.SQLitePtMarquage;
@@ -35,6 +38,7 @@ import com.localisation.parcours.model.PAWifi;
 import com.localisation.parcours.model.PtMarquage;
 import com.localisation.parcours.model.PtRC;
 import com.localisation.parcours.model.Trajet;
+
 
 import java.io.IOException;
 import java.sql.Time;
@@ -48,6 +52,7 @@ public class MapsActivity extends FragmentActivity {
 
     private List<Trajet> trajets;
     private Trajet trajet;
+    private LatLng previousPosition;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +80,7 @@ public class MapsActivity extends FragmentActivity {
             try {
                 addresses = geoCoder.getFromLocationName(trajet.getAdrDebut().toString(), 1);
                 mMap.addMarker(new MarkerOptions().position(new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude())).title(trajet.getAdrDebut().toString()));
+                previousPosition = new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude());
                 addresses = geoCoder.getFromLocationName(trajet.getAdrFin().toString(), 1);
                 mMap.addMarker(new MarkerOptions().position(new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude())).title(trajet.getAdrFin().toString()));
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude())));
@@ -233,8 +239,11 @@ public class MapsActivity extends FragmentActivity {
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             mMap.animateCamera(CameraUpdateFactory.zoomTo(trajet.getZoom()));
             mMap.addMarker(new MarkerOptions().position(new LatLng(bestMatch.getLatitude(), bestMatch.getLongitude())).title(bestMatch.getAddressLine(0).toString()));
-
-
+            Polyline line = mMap.addPolyline(new PolylineOptions()
+                    .add(previousPosition, new LatLng(bestMatch.getLatitude(), bestMatch.getLongitude()))
+                    .width(5)
+                    .color(Color.RED));
+            previousPosition = new LatLng(bestMatch.getLatitude(), bestMatch.getLongitude());
         }catch(IOException e)
         {
         }
